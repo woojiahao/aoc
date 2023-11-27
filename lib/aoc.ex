@@ -13,6 +13,10 @@ defmodule AOC do
 
   """
   def hello do
-    :world
+    Utils.Matrix.new(5, 4, 5)
+    |> Utils.Matrix.set(2, 3, 15)
+    |> Utils.Matrix.print()
+    |> Utils.Matrix.transpose()
+    |> Utils.Matrix.print()
   end
 end
