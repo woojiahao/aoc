@@ -32,18 +32,13 @@ defmodule AOC.TwentyTwentyThree.Day1 do
   def part_one(data) do
     data
     |> Enum.map(fn str ->
-      digits =
-        str
-        |> String.graphemes()
-        |> Enum.map(&Integer.parse/1)
-        |> Enum.filter(fn ch -> ch != :error end)
-        |> Enum.map(&elem(&1, 0))
-
-      first = List.first(digits)
-      last = List.last(digits)
-
-      first * 10 + last
+      str
+      |> String.graphemes()
+      |> Enum.map(&Integer.parse/1)
+      |> Enum.filter(fn ch -> ch != :error end)
+      |> Enum.map(&elem(&1, 0))
     end)
+    |> Enum.map(fn lst -> List.first(lst) * 10 + List.last(lst) end)
     |> Enum.sum()
   end
 
