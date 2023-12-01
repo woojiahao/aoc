@@ -30,6 +30,26 @@ defmodule Utils.Matrix do
   def transpose(%{m: m, n: n} = matrix),
     do: %Utils.Matrix{m: n, n: m, data: transpose_helper(n - 1, m - 1, matrix)}
 
+  # defp matmul(r, c, %{m: m} = matrix, %{n: n} = other) when r >= m or c >= n, do: %{}
+
+  # defp matmul_helper(r, c, %{m: m} = matrix, %{n: n} = other) do
+  # Enum.reduce(0..(n-1), 0.0, fn col ->
+
+  # end)
+  # for col <- 0..n do
+  #   for row <- 0..n do
+  #     acc += get(matrix, )
+  #   end
+  # end
+  # end
+
+  # def matmul(%{m: m1, n: n1} = matrix, %{m: m2, n: n2} = other) when n1 != m2,
+  #   do: raise("#{m1} x #{n1} matrix cannot multiply by #{m2} x #{n2} matrix.")
+
+  # def matmul(%{m: m} = matrix, %{n: n} = other) do
+  #   %Utils.Matrix{m: m, n: n, data: matmul_helper(0, 0, matrix, other)}
+  # end
+
   def get(_matrix, r, _c) when r < 0, do: raise("r < 0 not allowed.")
   def get(_matrix, _r, c) when c < 0, do: raise("c < 0 not allowed.")
   def get(%{m: m} = _matrix, r, _c) when r >= m, do: raise("r >= m not allowed.")
@@ -44,7 +64,7 @@ defmodule Utils.Matrix do
   def set(%{m: m, n: n, data: cur} = _matrix, r, c, value),
     do: %Utils.Matrix{m: m, n: n, data: Map.update!(cur, {r, c}, fn _old -> value end)}
 
-  def print(%{m: m, n: n, data: data} = matrix) do
+  def print(%{m: m, n: _n, data: data} = matrix) do
     for i <- 0..(m - 1) do
       data
       |> Enum.filter(fn {{r, _c}, _v} -> r == i end)
