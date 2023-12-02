@@ -43,5 +43,10 @@ defmodule AOC.TwentyTwentyThree.Day2 do
 
   @impl true
   def part_two(data) do
+    data
+    |> Enum.map(fn {_id, [red: red, green: green, blue: blue]} ->
+      red * green * blue
+    end)
+    |> Enum.sum()
   end
 end
