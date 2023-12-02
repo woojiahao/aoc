@@ -24,17 +24,24 @@ defmodule AOC.TwentyTwentyThree.Day2 do
         Enum.map(grab, fn [count, color] -> {String.to_atom(color), String.to_integer(count)} end)
       end)
 
-    red_max = parsed_sets |> Enum.max_by(&Keyword.get(&1, :red, 0)) |> Keyword.get(:red, 0)
-    green_max = parsed_sets |> Enum.max_by(&Keyword.get(&1, :green, 0)) |> Keyword.get(:green, 0)
-    blue_max = parsed_sets |> Enum.max_by(&Keyword.get(&1, :blue, 0)) |> Keyword.get(:blue, 0)
-
-    {String.to_integer(id), [red: red_max, green: green_max, blue: blue_max]}
+    {String.to_integer(id),
+     [
+       red: max_by_color(parsed_sets, :red),
+       green: max_by_color(parsed_sets, :green),
+       blue: max_by_color(parsed_sets, :blue)
+     ]}
   end
+
+  defp max_by_color(sets, color) when color in [:red, :green, :blue] do
+    sets |> Enum.max_by(&Keyword.get(&1, color, 0)) |> Keyword.get(color, 0)
+  end
+
+  defp max_by_color(_sets, _colors), do: raise("Invalid color")
 
   @impl true
   def part_one(data) do
     data
-    |> Enum.filter(fn {id, [red: red, green: green, blue: blue]} ->
+    |> Enum.filter(fn {_id, [red: red, green: green, blue: blue]} ->
       red <= @red_limit && green <= @green_limit && blue <= @blue_limit
     end)
     |> Enum.map(&elem(&1, 0))
@@ -44,9 +51,7 @@ defmodule AOC.TwentyTwentyThree.Day2 do
   @impl true
   def part_two(data) do
     data
-    |> Enum.map(fn {_id, [red: red, green: green, blue: blue]} ->
-      red * green * blue
-    end)
+    |> Enum.map(fn {_id, [red: red, green: green, blue: blue]} -> red * green * blue end)
     |> Enum.sum()
   end
 end
