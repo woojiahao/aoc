@@ -1,2 +1,7 @@
-# aoc-2023
-Advent of Code 2023 Done with Elixir 🤩
+# AOC
+
+Advent of Code Done with Elixir 🤩
+
+---
+
+Wrote a bunch of utility and Mix tasks to speed up the process of working on AOC every year!
