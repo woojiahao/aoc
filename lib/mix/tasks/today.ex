@@ -1,5 +1,6 @@
 defmodule Mix.Tasks.Today do
   @moduledoc false
+
   use Mix.Task
 
   @start Date.new!(Date.utc_today().year, 12, 1)

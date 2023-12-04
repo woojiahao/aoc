@@ -18,6 +18,25 @@ defmodule Utils.Matrix do
 
   def new(m, n), do: new(m, n, nil)
 
+  # def from(arr) do
+  #   rows = length(raw_data)
+  #   cols = length(Enum.at(raw_data, 0))
+
+  #   from_helper(0, 0, arr, %Utils.Matrix{
+  #     m: rows,
+  #     n: cols,
+  #     data: make_data(rows - 1, cols - 1, nil)
+  #   })
+  # end
+
+  # defp from_helper(row, col, _arr, %Utils.Matrix{m: m, n: n})
+  #      when row < 0 or col < 0 or row >= m or col >= n do
+  #   %{}
+  # end
+
+  # defp from_helper(row, col, arr, %Utils.Matrix{data: data}) do
+  # end
+
   defp transpose_helper(m, n, _matrix) when m < 0 or n < 0, do: %{}
 
   defp transpose_helper(m, n, matrix) do
