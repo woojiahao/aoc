@@ -1,7 +1,5 @@
 defmodule AOC.TwentyTwentyThree.Day5 do
-  @moduledoc """
-  50 98 2 -> [98, 99] -> [50, 51]
-  """
+  @moduledoc false
 
   use AOC.Solution
 
@@ -80,6 +78,10 @@ defmodule AOC.TwentyTwentyThree.Day5 do
   defp spread(seed_ranges, intervals) do
     seed_ranges
     |> Enum.flat_map(fn [seed_start, seed_end] ->
+      # For each seed range available, find the overlaps with the intervals given
+
+      # Initial list of overlaps should naively contain those within the interval range,
+      # excluding any leading/trailing range
       overlaps =
         intervals
         |> Enum.reject(fn {[first, last], _d} ->
@@ -91,6 +93,7 @@ defmodule AOC.TwentyTwentyThree.Day5 do
           otherwise -> otherwise
         end)
 
+      # Cleaning up the leading range
       [first_overlap_start, _] = List.first(overlaps)
 
       overlaps =
@@ -101,6 +104,7 @@ defmodule AOC.TwentyTwentyThree.Day5 do
           overlaps
         end
 
+      # Cleaning up the trailing range
       [_, last_overlap_end] = List.last(overlaps)
 
       overlaps =
@@ -113,14 +117,17 @@ defmodule AOC.TwentyTwentyThree.Day5 do
       overlaps
     end)
     |> Enum.map(fn [range_start, range_end] ->
+      # For each of the overlapping ranges, find the equivalent mapping
       intervals
       |> Enum.find(fn {[interval_start, interval_end], _d} ->
         range_start <= interval_end and interval_start <= range_end
       end)
       |> then(fn
+        # If no equivalent mapping, just use the original
         nil ->
           [range_start, range_end]
 
+        # Otherwise, figure out the offset and compute
         {[src_start, _src_end], [dest_start, _dest_end]} ->
           diff = dest_start - src_start
           [range_start + diff, range_end + diff]
