@@ -23,21 +23,15 @@ defmodule AOC.TwentyTwentyThree.Day6 do
     |> Enum.product()
   end
 
-  defp ways_to_win({time, distance}) do
-    1..time
-    |> Enum.map(&(&1 * (time - &1)))
-    |> Enum.reject(&(&1 <= distance))
-    |> length()
-  end
-
   @impl true
   def part_two(_data) do
     ["Time:" <> time, "Distance:" <> distance] = Data.load_day(6)
     time = time |> String.replace(" ", "") |> String.to_integer()
     distance = distance |> String.replace(" ", "") |> String.to_integer()
-
-    ways_to_win_max(1, time, time, distance) - ways_to_win_min(1, time, time, distance) + 1
+    ways_to_win({time, distance})
   end
+
+  defp ways_to_win({t, d}), do: ways_to_win_max(1, t, t, d) - ways_to_win_min(1, t, t, d) + 1
 
   defp ways_to_win_min(l, r, _t, _d) when l >= r, do: l
 
