@@ -1,0 +1,58 @@
+defmodule AOC.TwentyTwentyThree.Day6 do
+  @moduledoc false
+
+  use AOC.Solution
+
+  @impl true
+  def load_data do
+    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(6)
+    Enum.zip(parse_row(time), parse_row(distance))
+  end
+
+  defp parse_row(row),
+    do:
+      row
+      |> String.trim()
+      |> String.split(" ", trim: true)
+      |> Enum.map(&String.to_integer/1)
+
+  @impl true
+  def part_one(data) do
+    data
+    |> Enum.map(&ways_to_win/1)
+    |> Enum.product()
+  end
+
+  defp ways_to_win({time, distance}) do
+    1..time
+    |> Enum.map(&(&1 * (time - &1)))
+    |> Enum.reject(&(&1 <= distance))
+    |> length()
+  end
+
+  @impl true
+  def part_two(_data) do
+    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(6)
+    time = time |> String.replace(" ", "") |> String.to_integer()
+    distance = distance |> String.replace(" ", "") |> String.to_integer()
+
+    ways_to_win_max(1, time, time, distance) - ways_to_win_min(1, time, time, distance) + 1
+  end
+
+  defp ways_to_win_min(l, r, _t, _d) when l >= r, do: l
+
+  defp ways_to_win_min(l, r, t, d) when (l + div(r - l, 2)) * (t - (l + div(r - l, 2))) > d,
+    do: ways_to_win_min(l, l + div(r - l, 2), t, d)
+
+  defp ways_to_win_min(l, r, t, d),
+    do: ways_to_win_min(l + div(r - l, 2) + 1, r, t, d)
+
+  defp ways_to_win_max(l, r, _t, _d) when l >= r, do: l
+
+  defp ways_to_win_max(l, r, t, d)
+       when (l + trunc(ceil((r - l) / 2))) * (t - (l + trunc(ceil((r - l) / 2)))) > d,
+       do: ways_to_win_max(l + trunc(ceil((r - l) / 2)), r, t, d)
+
+  defp ways_to_win_max(l, r, t, d),
+    do: ways_to_win_max(l, l + trunc(ceil((r - l) / 2)) - 1, t, d)
+end
