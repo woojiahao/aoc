@@ -68,18 +68,71 @@ defmodule AOC.TwentyTwentyThree.Day5 do
 
     seeds
     |> Enum.chunk_every(2)
-    |> Enum.map(fn [start, l] ->
-      Task.async(fn ->
-        start..(start + l - 1)
-        |> Enum.map(&Task.async(fn -> dfs(&1, maps) end))
-        |> Enum.map(&Task.await(&1, 50_000))
-        |> Enum.min()
-      end)
+    |> Enum.map(fn [seed_start, seed_length] ->
+      solve([[seed_start, seed_start + seed_length - 1]], maps)
     end)
-    |> Enum.flat_map(&Task.await(&1, :infinity))
+    |> Enum.flat_map(& &1)
+    |> Enum.map(fn [first, _second] -> first end)
     |> Enum.min()
   end
 
-  defp solve(seed_range, [mapping | rest]) do
+  # Spreads the seed range into multiple smaller ranges that match the intervals
+  defp spread(seed_ranges, intervals) do
+    seed_ranges
+    |> Enum.flat_map(fn [seed_start, seed_end] ->
+      overlaps =
+        intervals
+        |> Enum.reject(fn {[first, last], _d} ->
+          seed_start > last or seed_end < first
+        end)
+        |> Enum.map(fn {[first, last], _d} -> [max(seed_start, first), min(seed_end, last)] end)
+        |> then(fn
+          [] -> [[seed_start, seed_end]]
+          otherwise -> otherwise
+        end)
+
+      [first_overlap_start, _] = List.first(overlaps)
+
+      overlaps =
+        if first_overlap_start > seed_start do
+          # Leading overlap for seed
+          [[seed_start, first_overlap_start - 1]] ++ overlaps
+        else
+          overlaps
+        end
+
+      [_, last_overlap_end] = List.last(overlaps)
+
+      overlaps =
+        if last_overlap_end < seed_end do
+          overlaps ++ [[last_overlap_end + 1, seed_end]]
+        else
+          overlaps
+        end
+
+      overlaps
+    end)
+    |> Enum.map(fn [range_start, range_end] ->
+      intervals
+      |> Enum.find(fn {[interval_start, interval_end], _d} ->
+        range_start <= interval_end and interval_start <= range_end
+      end)
+      |> then(fn
+        nil ->
+          [range_start, range_end]
+
+        {[src_start, _src_end], [dest_start, _dest_end]} ->
+          diff = dest_start - src_start
+          [range_start + diff, range_end + diff]
+      end)
+    end)
+  end
+
+  defp solve(seed_ranges, []), do: seed_ranges
+
+  defp solve(seed_ranges, [mapping | rest]) do
+    seed_ranges
+    |> spread(mapping)
+    |> solve(rest)
   end
 end
