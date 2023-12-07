@@ -1,145 +1,163 @@
-defmodule AOC.TwentyTwentyThree.Day5 do
+defmodule AOC.TwentyTwentyThree.Day7 do
   @moduledoc false
-
   use AOC.Solution
+
+  @card_values %{
+    "2" => 3,
+    "3" => 5,
+    "4" => 7,
+    "5" => 11,
+    "6" => 13,
+    "7" => 17,
+    "8" => 19,
+    "9" => 23,
+    "T" => 29,
+    "J" => 31,
+    "Q" => 37,
+    "K" => 41,
+    "A" => 43
+  }
+
+  @card_values_with_jokers %{
+    "J" => 3,
+    "2" => 5,
+    "3" => 7,
+    "4" => 11,
+    "5" => 13,
+    "6" => 17,
+    "7" => 19,
+    "8" => 23,
+    "9" => 29,
+    "T" => 31,
+    "Q" => 37,
+    "K" => 41,
+    "A" => 43
+  }
+
+  defp hash_hand(hand, values) do
+    hand
+    |> String.graphemes()
+    |> Enum.map(&Map.get(values, &1))
+  end
 
   @impl true
   def load_data do
-    [
-      "seeds: " <> seeds,
-      "seed-to-soil map:\n" <> seed_to_soil,
-      "soil-to-fertilizer map:\n" <> soil_to_fertilizer,
-      "fertilizer-to-water map:\n" <> fertilizer_to_water,
-      "water-to-light map:\n" <> water_to_light,
-      "light-to-temperature map:\n" <> light_to_temperature,
-      "temperature-to-humidity map:\n" <> temperature_to_humidity,
-      "humidity-to-location map:\n" <> humidity_to_location
-    ] = Data.load_day(5, "\n\n")
-
-    processed_seeds = seeds |> String.split(" ", trim: true) |> Enum.map(&String.to_integer/1)
-    sts = process_map(seed_to_soil)
-    stf = process_map(soil_to_fertilizer)
-    ftw = process_map(fertilizer_to_water)
-    wtl = process_map(water_to_light)
-    ltt = process_map(light_to_temperature)
-    tth = process_map(temperature_to_humidity)
-    htl = process_map(humidity_to_location)
-
-    {processed_seeds, [sts, stf, ftw, wtl, ltt, tth, htl]}
-  end
-
-  defp process_map(map) do
-    map
-    |> String.split("\n", trim: true)
+    Data.load_day(7)
     |> Enum.map(&String.split(&1, " ", trim: true))
-    |> Enum.map(&Enum.map(&1, fn n -> String.to_integer(n) end))
-    |> Enum.map(fn [d, s, r] -> {[s, s + r - 1], [d, d + r - 1]} end)
-    |> Enum.sort()
-
-    # |> IO.inspect(charlists: :as_lists)
+    |> Enum.map(fn [hand, bid] ->
+      [hand, String.to_integer(bid)]
+    end)
   end
 
   @impl true
   def part_one(data) do
-    {seeds, maps} = data
-    seeds |> Enum.map(&dfs(&1, maps)) |> Enum.min()
+    data
+    |> Enum.map(fn [hand, bid] ->
+      [process_hand_weight(hand), hand, bid]
+    end)
+    |> Enum.sort_by(fn [w, h, _] -> {w, hash_hand(h, @card_values)} end)
+    |> Enum.with_index(1)
+    |> Enum.map(fn {[_, _, b], i} -> b * i end)
+    |> Enum.sum()
   end
 
-  defp dfs(num, []), do: num
+  defp process_hand_weight(hand) do
+    hand =
+      hand
+      |> String.graphemes()
+      |> Enum.frequencies()
+      |> Enum.map(&elem(&1, 1))
+      |> Enum.sort()
 
-  defp dfs(num, [mapping | rest]) do
-    mapping
-    |> Enum.find(fn {[first, last], _d} -> num >= first and num <= last end)
-    |> then(fn
-      nil ->
-        num
-
-      {[start, _last], [dest_start, _dest_last]} ->
-        num - start + dest_start
-    end)
-    |> dfs(rest)
+    case length(hand) do
+      5 -> 1
+      4 -> 2
+      3 -> if hand == [1, 2, 2], do: 3, else: 4
+      2 -> if hand == [2, 3], do: 5, else: 6
+      1 -> 7
+    end
   end
 
   @impl true
   def part_two(data) do
-    {seeds, maps} = data
-
-    seeds
-    |> Enum.chunk_every(2)
-    |> Enum.map(fn [seed_start, seed_length] ->
-      solve([[seed_start, seed_start + seed_length - 1]], maps)
+    data
+    |> Enum.map(fn [hand, bid] ->
+      [process_with_jokers(hand), hand, bid]
     end)
-    |> Enum.flat_map(& &1)
-    |> Enum.map(fn [first, _second] -> first end)
-    |> Enum.min()
+    |> Enum.sort_by(fn [w, h, _] -> {w, hash_hand(h, @card_values_with_jokers)} end)
+    |> IO.inspect(charlists: :as_lists)
+    |> Enum.with_index(1)
+    |> Enum.map(fn {[_, _, b], i} -> b * i end)
+    |> Enum.sum()
   end
 
-  # Spreads the seed range into multiple smaller ranges that match the intervals
-  defp spread(seed_ranges, intervals) do
-    seed_ranges
-    |> Enum.flat_map(fn [seed_start, seed_end] ->
-      # For each seed range available, find the overlaps with the intervals given
+  defp process_with_jokers(hand) do
+    card_count =
+      hand
+      |> String.graphemes()
+      |> Enum.frequencies()
 
-      # Initial list of overlaps should naively contain those within the interval range,
-      # excluding any leading/trailing range
-      overlaps =
-        intervals
-        |> Enum.reject(fn {[first, last], _d} ->
-          seed_start > last or seed_end < first
-        end)
-        |> Enum.map(fn {[first, last], _d} -> [max(seed_start, first), min(seed_end, last)] end)
-        |> then(fn
-          [] -> [[seed_start, seed_end]]
-          otherwise -> otherwise
-        end)
+    joker_count = Map.get(card_count, "J", 0)
+    original_hand_weight = process_hand_weight(hand)
 
-      # Cleaning up the leading range
-      [first_overlap_start, _] = List.first(overlaps)
+    # Joker count => 1
+    # high card -> one pair
+    # one pair -> three of a kind
+    # two pair -> full house
+    # three of a kind -> four of a kind
+    # full house (not possible)
+    # four of a kind -> five of a kind
 
-      overlaps =
-        if first_overlap_start > seed_start do
-          # Leading overlap for seed
-          [[seed_start, first_overlap_start - 1]] ++ overlaps
-        else
-          overlaps
+    # Joker count => 2
+    # high card (not possible)
+    # one pair -> joker is the pair -> three of a kind
+    # two pair -> joker is one of them -> four of a kind
+    # three of a kind -> five of a kind (joker pair converts to other three)
+    # full house -> five of a kind
+    # four of a kind (not possible)
+
+    # Joker count => 3
+    # high card (not possible)
+    # one pair (not possible)
+    # two pair (not possible)
+    # three of a kind (all jokers) -> four of a kind
+    # full house (jokers + pair) -> five of a kind
+    # four of a kind (not possible)
+    case joker_count do
+      0 ->
+        original_hand_weight
+
+      1 ->
+        case original_hand_weight do
+          1 -> 2
+          2 -> 4
+          3 -> 5
+          4 -> 6
+          6 -> 7
         end
 
-      # Cleaning up the trailing range
-      [_, last_overlap_end] = List.last(overlaps)
-
-      overlaps =
-        if last_overlap_end < seed_end do
-          overlaps ++ [[last_overlap_end + 1, seed_end]]
-        else
-          overlaps
+      2 ->
+        case original_hand_weight do
+          2 -> 4
+          3 -> 6
+          4 -> 7
+          5 -> 7
         end
 
-      overlaps
-    end)
-    |> Enum.map(fn [range_start, range_end] ->
-      # For each of the overlapping ranges, find the equivalent mapping
-      intervals
-      |> Enum.find(fn {[interval_start, interval_end], _d} ->
-        range_start <= interval_end and interval_start <= range_end
-      end)
-      |> then(fn
-        # If no equivalent mapping, just use the original
-        nil ->
-          [range_start, range_end]
+      3 ->
+        case original_hand_weight do
+          4 -> 6
+          5 -> 7
+        end
 
-        # Otherwise, figure out the offset and compute
-        {[src_start, _src_end], [dest_start, _dest_end]} ->
-          diff = dest_start - src_start
-          [range_start + diff, range_end + diff]
-      end)
-    end)
-  end
+      4 ->
+        7
 
-  defp solve(seed_ranges, []), do: seed_ranges
+      5 ->
+        7
 
-  defp solve(seed_ranges, [mapping | rest]) do
-    seed_ranges
-    |> spread(mapping)
-    |> solve(rest)
+      _ ->
+        1
+    end
   end
 end
