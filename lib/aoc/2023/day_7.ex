@@ -23,19 +23,19 @@ defmodule AOC.TwentyTwentyThree.Day7 do
   def part_one(data) do
     data
     |> Enum.map(fn [hand, bid] -> [process_hand_weight(hand), hand, bid] end)
-    |> solve()
+    |> solve(@card_values)
   end
 
   @impl true
   def part_two(data) do
     data
     |> Enum.map(fn [hand, bid] -> [process_with_jokers(hand), hand, bid] end)
-    |> solve()
+    |> solve(@card_values_with_jokers)
   end
 
-  defp solve(data) do
+  defp solve(data, values) do
     data
-    |> Enum.sort_by(fn [w, h, _] -> {w, hash_hand(h, @card_values_with_jokers)} end)
+    |> Enum.sort_by(fn [w, h, _] -> {w, hash_hand(h, values)} end)
     |> Enum.with_index(1)
     |> Enum.map(fn {[_, _, b], i} -> b * i end)
     |> Enum.sum()
