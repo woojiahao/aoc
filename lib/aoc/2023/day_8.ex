@@ -10,35 +10,20 @@ defmodule AOC.TwentyTwentyThree.Day8 do
         String.split(instructions, "", trim: true),
         map
         |> String.split("\n", trim: true)
-        |> Enum.map(&String.split(&1, " = ", trim: true))
-        |> Enum.map(fn [from, to] ->
-          {from, to |> String.slice(1..-2) |> String.split(", ", trim: true)}
+        |> Map.new(fn <<from::binary-3>> <>
+                        " = " <> "(" <> <<left::binary-3>> <> ", " <> <<right::binary-3>> <> ")" ->
+          {from, [left, right]}
         end)
-        |> Map.new()
       ]
     end)
   end
 
-  defp next_instruction(element, idx, instructions, map) do
-    if(Enum.at(instructions, idx) == "L", do: 0, else: 1)
-    |> then(&(map |> Map.get(element) |> Enum.at(&1)))
-  end
-
   @impl true
   def part_one(data) do
-    data |> then(fn [instructions, map] -> lookup(0, "AAA", instructions, map, 0) end)
-  end
-
-  defp lookup(_idx, "ZZZ", _instructions, _map, steps), do: steps
-
-  defp lookup(idx, element, instructions, map, steps) do
-    lookup(
-      General.cyclic_index_next(idx, instructions),
-      next_instruction(element, idx, instructions, map),
-      instructions,
-      map,
-      steps + 1
-    )
+    data
+    |> then(fn [instructions, map] ->
+      traverse("AAA", 0, 0, fn el -> el == "ZZZ" end, instructions, map)
+    end)
   end
 
   @impl true
@@ -48,20 +33,24 @@ defmodule AOC.TwentyTwentyThree.Day8 do
       map
       |> Map.keys()
       |> Enum.filter(&String.ends_with?(&1, "A"))
-      |> Enum.map(&ghost(0, &1, instructions, map, 0))
+      |> Enum.map(&traverse(&1, 0, 0, fn el -> String.ends_with?(el, "Z") end, instructions, map))
       |> Math.lcm()
     end)
   end
 
-  defp ghost(_idx, <<_::binary-2>> <> "Z", _instructions, _map, steps), do: steps
-
-  defp ghost(idx, element, instructions, map, steps) do
-    ghost(
-      General.cyclic_index_next(idx, instructions),
-      next_instruction(element, idx, instructions, map),
-      instructions,
-      map,
-      steps + 1
-    )
+  defp traverse(element, idx, steps, goal?, instructions, map) do
+    if goal?.(element) do
+      steps
+    else
+      traverse(
+        if(Enum.at(instructions, idx) == "L", do: 0, else: 1)
+        |> then(&(map |> Map.get(element) |> Enum.at(&1))),
+        General.cyclic_index_next(idx, instructions),
+        steps + 1,
+        goal?,
+        instructions,
+        map
+      )
+    end
   end
 end
