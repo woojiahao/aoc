@@ -14,4 +14,6 @@ defmodule Utils.Math do
   def lcm([a]), do: a
   def lcm([a, b]), do: lcm(a, b)
   def lcm([a, b | rest]), do: Enum.reduce(rest, lcm(a, b), &lcm(&1, &2))
+
+  def inf, do: :math.pow(10, 10)
 end
