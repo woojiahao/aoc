@@ -1,0 +1,68 @@
+defmodule AOC.TwentyTwentyThree.Day11 do
+  @moduledoc false
+
+  use AOC.Solution
+
+  @impl true
+  def load_data do
+    Data.load_day_as_grid(11)
+    |> then(fn {grid, m, n} ->
+      galaxies =
+        grid |> Enum.filter(&(elem(&1, 1) == "#")) |> Enum.map(&elem(&1, 0))
+
+      empty_rows =
+        MapSet.new(0..(m - 1))
+        |> MapSet.difference(galaxies |> Enum.map(&elem(&1, 0)) |> MapSet.new())
+        |> Enum.sort()
+
+      empty_cols =
+        MapSet.new(0..(n - 1))
+        |> MapSet.difference(galaxies |> Enum.map(&elem(&1, 1)) |> MapSet.new())
+        |> Enum.sort()
+
+      {MapSet.new(galaxies), empty_rows, empty_cols}
+    end)
+  end
+
+  @impl true
+  def part_one({galaxies, empty_rows, empty_cols}) do
+    solve(galaxies, empty_rows, empty_cols, 2)
+  end
+
+  @impl true
+  def part_two({galaxies, empty_rows, empty_cols}) do
+    solve(galaxies, empty_rows, empty_cols, 1_000_000)
+  end
+
+  defp get_shift(point, list), do: get_shift(point, list, 0, length(list) - 1)
+
+  defp get_shift(_point, _list, l, r) when l >= r, do: l
+  defp get_shift(point, [f | _], _, _) when point < f, do: 0
+
+  defp get_shift(point, list, l, r) do
+    m = l + div(r - l, 2)
+
+    cond do
+      point > List.last(list) -> length(list)
+      Enum.at(list, m) >= point -> get_shift(point, list, l, m)
+      true -> get_shift(point, list, m + 1, r)
+    end
+  end
+
+  defp solve(galaxies, empty_rows, empty_cols, growth) do
+    expanded =
+      galaxies
+      |> Enum.map(fn {r, c} ->
+        {r + get_shift(r, empty_rows) * (growth - 1), c + get_shift(c, empty_cols) * (growth - 1)}
+      end)
+      |> Enum.with_index()
+
+    expanded
+    |> Enum.reduce(0, fn {gi, i}, acc ->
+      acc +
+        (expanded
+         |> Enum.slice((i + 1)..-1)
+         |> Enum.reduce(0, fn {gj, _}, t -> t + Math.manhattan(gi, gj) end))
+    end)
+  end
+end

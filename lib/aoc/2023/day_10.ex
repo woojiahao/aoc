@@ -3,7 +3,6 @@ defmodule AOC.TwentyTwentyThree.Day10 do
   require Integer
   use AOC.Solution
 
-  @directions [{-1, 0}, {1, 0}, {0, -1}, {0, 1}]
   @pipes %{
     "|" => [{-1, 0}, {1, 0}],
     "-" => [{0, -1}, {0, 1}],

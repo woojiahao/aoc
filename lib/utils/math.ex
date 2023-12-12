@@ -16,4 +16,9 @@ defmodule Utils.Math do
   def lcm([a, b | rest]), do: Enum.reduce(rest, lcm(a, b), &lcm(&1, &2))
 
   def inf, do: :math.pow(10, 10)
+
+  def manhattan({x1, y1}, {x2, y2}), do: abs(x1 - x2) + abs(y1 - y2)
+
+  def euclidean({x1, y1}, {x2, y2}),
+    do: :math.pow(:math.pow(x1 - x2, 2) + :math.pow(y1 - y2, 2), 0.5)
 end
