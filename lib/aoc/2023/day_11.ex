@@ -35,7 +35,6 @@ defmodule AOC.TwentyTwentyThree.Day11 do
   end
 
   defp get_shift(point, list), do: get_shift(point, list, 0, length(list) - 1)
-
   defp get_shift(_point, _list, l, r) when l >= r, do: l
   defp get_shift(point, [f | _], _, _) when point < f, do: 0
 
