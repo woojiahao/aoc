@@ -111,17 +111,12 @@ defmodule AOC.TwentyTwentyThree.Day10 do
   @impl true
   def part_two({start, graph, m, n}) do
     path = loop_path([start], graph, m, n, MapSet.new([start]))
-    non_path = graph |> Map.keys() |> Enum.reject(&MapSet.member?(path, &1))
 
-    non_path
+    graph
+    |> Map.keys()
+    |> Enum.reject(&MapSet.member?(path, &1))
     |> Enum.count(fn {r, c} ->
-      {r, c}
-      |> Stream.iterate(fn {i, j} -> {i + 1, j + 1} end)
-      |> Stream.take_while(&in_range?(&1, m, n))
-      |> Stream.filter(&MapSet.member?(path, &1))
-      |> Stream.filter(&(graph[&1][:point] not in ~w(L 7)))
-      |> Enum.count()
-      |> then(&Integer.is_odd(&1))
+      Geometry.in_polygon?(path, &(graph[&1][:point] not in ~w(L 7)), r, c, m, n)
     end)
   end
 

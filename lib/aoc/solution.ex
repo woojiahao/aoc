@@ -7,7 +7,7 @@ defmodule AOC.Solution do
 
   defmacro __using__(_opts) do
     quote do
-      alias Utils.{Data, General, Matrix, Math}
+      alias Utils.{Data, General, Geometry, Matrix, Math}
 
       @behaviour AOC.Solution
 

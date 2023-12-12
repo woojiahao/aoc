@@ -11,13 +11,13 @@ defmodule AOC.TwentyTwentyThree.Day11 do
         grid |> Enum.filter(&(elem(&1, 1) == "#")) |> Enum.map(&elem(&1, 0))
 
       empty_rows =
-        MapSet.new(0..(m - 1))
-        |> MapSet.difference(galaxies |> Enum.map(&elem(&1, 0)) |> MapSet.new())
+        0..(m - 1)
+        |> General.list_set_difference(Enum.map(galaxies, &elem(&1, 0)))
         |> Enum.sort()
 
       empty_cols =
-        MapSet.new(0..(n - 1))
-        |> MapSet.difference(galaxies |> Enum.map(&elem(&1, 1)) |> MapSet.new())
+        0..(n - 1)
+        |> General.list_set_difference(Enum.map(galaxies, &elem(&1, 0)))
         |> Enum.sort()
 
       {MapSet.new(galaxies), empty_rows, empty_cols}
@@ -53,16 +53,15 @@ defmodule AOC.TwentyTwentyThree.Day11 do
     expanded =
       galaxies
       |> Enum.map(fn {r, c} ->
-        {r + get_shift(r, empty_rows) * (growth - 1), c + get_shift(c, empty_cols) * (growth - 1)}
+        {
+          r + get_shift(r, empty_rows) * (growth - 1),
+          c + get_shift(c, empty_cols) * (growth - 1)
+        }
       end)
-      |> Enum.with_index()
 
     expanded
-    |> Enum.reduce(0, fn {gi, i}, acc ->
-      acc +
-        (expanded
-         |> Enum.slice((i + 1)..-1)
-         |> Enum.reduce(0, fn {gj, _}, t -> t + Math.manhattan(gi, gj) end))
-    end)
+    |> General.distinct_pairs()
+    |> Enum.map(fn {i, j} -> Math.manhattan(i, j) end)
+    |> Enum.sum()
   end
 end
