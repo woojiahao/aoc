@@ -13,4 +13,13 @@ defmodule Utils.General do
   """
   def first_last_tuple([]), do: nil
   def first_last_tuple(lst), do: {List.first(lst), List.last(lst)}
+
+  @spec prepend_if_true(list(), boolean(), list()) :: list()
+  def prepend_if_true(list, predicate, extra) do
+    if predicate do
+      extra ++ list
+    else
+      list
+    end
+  end
 end
