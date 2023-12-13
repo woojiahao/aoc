@@ -49,4 +49,17 @@ defmodule Utils.General do
   def list_set_difference(first, second) do
     MapSet.new(first) |> MapSet.difference(MapSet.new(second))
   end
+
+  @spec map_sum(list(any()), (any() -> number())) :: number()
+  def map_sum(lst, map_fn) do
+    lst
+    |> Enum.map(&map_fn.(&1))
+    |> Enum.sum()
+  end
+
+  @spec rows_count(list(list(any()))) :: integer()
+  def rows_count(matrix), do: length(matrix)
+
+  @spec cols_count(list(list(any()))) :: integer()
+  def cols_count(matrix), do: matrix |> Enum.at(0) |> length()
 end
