@@ -2,6 +2,8 @@ defmodule AOC.TwentyTwentyThree.Day14 do
   @moduledoc false
   use AOC.Solution
 
+  @upper 1_000_000_000
+
   @impl true
   def load_data(), do: Data.load_day_as_grid(14)
 
@@ -9,13 +11,44 @@ defmodule AOC.TwentyTwentyThree.Day14 do
   def part_one({grid, m, n}), do: grid |> tilt(m, n, :up) |> calculate_load(m)
 
   @impl true
-  def part_two({grid, m, n}),
-    do:
-      0..effective(1_000_000_000)
-      |> Enum.reduce(grid, fn _, acc -> cycle(acc, m, n) end)
-      |> calculate_load(m)
+  def part_two({grid, m, n}) do
+    c =
+      0..@upper
+      |> Stream.transform(
+        {grid, %{}, false},
+        fn
+          _, {_, _, true} = acc ->
+            {:halt, acc}
 
-  defp effective(n), do: rem(n - 140, 52) + 88
+          i, {cur, seen, false} = acc ->
+            hash = hash_grid(cur, m, n)
+
+            if Map.has_key?(seen, hash) do
+              {[{i + 1, seen[hash]}], {acc, seen, true}}
+            else
+              next = cycle(cur, m, n)
+              {[next], {next, Map.put(seen, hash, i + 1), false}}
+            end
+        end
+      )
+      |> Enum.to_list()
+
+    {offset, start_cycle} = List.last(c)
+    cycle_length = offset - start_cycle
+
+    c
+    |> Enum.at(rem(@upper - offset, cycle_length) + start_cycle - 1)
+    |> calculate_load(m)
+  end
+
+  defp hash_grid(grid, m, n) do
+    0..(m - 1)
+    |> Enum.reduce([], fn r, acc ->
+      acc ++ [0..(n - 1) |> Enum.map_join(&grid[{r, &1}])]
+    end)
+    |> Enum.join("\n")
+    |> :erlang.phash2()
+  end
 
   defp cycle(grid, m, n),
     do:
