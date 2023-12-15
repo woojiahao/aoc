@@ -38,22 +38,19 @@ defmodule AOC.TwentyTwentyThree.Day15 do
 
   defp sequence([], boxes), do: boxes
 
-  defp sequence([{label, h, -1} | rest], boxes) do
+  defp sequence([{label, h, _} = instruction | rest], boxes) do
     box = Enum.at(boxes, h)
     idx = Enum.find_index(box, &(elem(&1, 0) == label))
-    updated_box = if is_nil(idx), do: box, else: List.delete_at(box, idx)
-    sequence(rest, List.replace_at(boxes, h, updated_box))
+    sequence(rest, List.replace_at(boxes, h, update_box(box, instruction, idx)))
   end
 
-  defp sequence([{label, h, length} | rest], boxes) do
-    box = Enum.at(boxes, h)
-    idx = Enum.find_index(box, &(elem(&1, 0) == label))
+  defp update_box(box, {label, _, -1}, idx),
+    do: if(is_nil(idx), do: box, else: List.delete_at(box, idx))
 
-    updated_box =
-      if is_nil(idx),
+  defp update_box(box, {label, _, length}, idx),
+    do:
+      if(is_nil(idx),
         do: box ++ [{label, length}],
         else: List.replace_at(box, idx, {label, length})
-
-    sequence(rest, List.replace_at(boxes, h, updated_box))
-  end
+      )
 end
