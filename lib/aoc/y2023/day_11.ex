@@ -1,4 +1,4 @@
-defmodule AOC.TwentyTwentyThree.Day11 do
+defmodule AOC.Y2023.Day11 do
   @moduledoc false
 
   use AOC.Solution

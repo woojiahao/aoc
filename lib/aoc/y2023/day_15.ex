@@ -1,4 +1,4 @@
-defmodule AOC.TwentyTwentyThree.Day15 do
+defmodule AOC.Y2023.Day15 do
   @moduledoc false
   use AOC.Solution
 
@@ -44,7 +44,7 @@ defmodule AOC.TwentyTwentyThree.Day15 do
     sequence(rest, List.replace_at(boxes, h, update_box(box, instruction, idx)))
   end
 
-  defp update_box(box, {label, _, -1}, idx),
+  defp update_box(box, {_, _, -1}, idx),
     do: if(is_nil(idx), do: box, else: List.delete_at(box, idx))
 
   defp update_box(box, {label, _, length}, idx),

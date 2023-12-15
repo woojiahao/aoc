@@ -32,13 +32,15 @@ defmodule Mix.Tasks.Day do
 
   defp part_one(day) do
     IO.puts("===== DAY #{day} PART 1 =====")
-    module = "Elixir.AOC.TwentyTwentyThree.Day#{day}"
+    year = Date.utc_today().year
+    module = "Elixir.AOC.Y#{year}.Day#{day}"
     apply(String.to_atom(module), :solve_one, []) |> IO.puts()
   end
 
   defp part_two(day) do
     IO.puts("===== DAY #{day} PART 2 =====")
-    module = "Elixir.AOC.TwentyTwentyThree.Day#{day}"
+    year = Date.utc_today().year
+    module = "Elixir.AOC.Y#{year}.Day#{day}"
     apply(String.to_atom(module), :solve_two, []) |> IO.puts()
   end
 end

@@ -42,6 +42,7 @@ defmodule Mix.Tasks.Today do
   end
 
   defp get_module(day) do
-    "Elixir.AOC.TwentyTwentyThree.Day#{day + 1}"
+    year = Date.utc_today().year
+    "Elixir.AOC.Y#{year}.Day#{day + 1}"
   end
 end
