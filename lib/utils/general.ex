@@ -57,6 +57,13 @@ defmodule Utils.General do
     |> Enum.sum()
   end
 
+  @spec map_max(list(any()), (any() -> number())) :: number()
+  def map_max(lst, map_fn) do
+    lst
+    |> Enum.map(&map_fn.(&1))
+    |> Enum.max()
+  end
+
   @spec rows_count(list(list(any()))) :: integer()
   def rows_count(matrix), do: length(matrix)
 
