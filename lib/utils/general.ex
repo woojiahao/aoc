@@ -64,6 +64,27 @@ defmodule Utils.General do
     |> Enum.max()
   end
 
+  @spec map_min(list(any()), (any() -> number())) :: number()
+  def map_min(lst, map_fn) do
+    lst
+    |> Enum.map(&map_fn.(&1))
+    |> Enum.min()
+  end
+
+  @spec map_min_max(list(any()), (any() -> number())) :: {number(), number()}
+  def map_min_max(lst, map_fn) do
+    lst
+    |> Enum.map(&map_fn.(&1))
+    |> Enum.min_max()
+  end
+
+  @spec flat_map_min_max(list(any()), (any() -> list(number()))) :: {number(), number()}
+  def flat_map_min_max(lst, map_fn) do
+    lst
+    |> Enum.flat_map(&map_fn.(&1))
+    |> Enum.min_max()
+  end
+
   @spec rows_count(list(list(any()))) :: integer()
   def rows_count(matrix), do: length(matrix)
 
