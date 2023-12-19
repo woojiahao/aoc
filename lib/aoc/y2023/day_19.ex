@@ -3,7 +3,8 @@ defmodule AOC.Y2023.Day19 do
   Part 1 is a simple traversal per rating to figure out the outcome.
 
   Part 2 likely requires starting from the back and going from all accepted states and reversing
-  to see what led to this state
+  to see what led to this state. This lets us track what ranges of x,m,a,s can reach that given
+  A state and we can just use those values
   """
   use AOC.Solution
 
@@ -108,15 +109,17 @@ defmodule AOC.Y2023.Day19 do
     do: tree(workflows[next], workflows, path, agent)
 
   defp tree([{:conditional, c, v, cmp, o} | rest], workflows, path, agent) do
-    # Negative case
     if o == "A" do
+      # If this path can reach "A", then add to global store
       Agent.update(agent, &(&1 ++ [path ++ [{c, cmp, v}]]))
     end
 
     if o != "R" and o != "A" do
+      # If the outcome leads to another workflow, follow it
       tree(workflows[o], workflows, path ++ [{c, cmp, v}], agent)
     end
 
+    # Regardless of outcome, we need to follow the inverse path
     tree(rest, workflows, path ++ [{c, inverse_cmp(cmp), v}], agent)
   end
 
