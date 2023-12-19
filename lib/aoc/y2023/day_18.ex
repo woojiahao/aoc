@@ -1,5 +1,11 @@
 defmodule AOC.Y2023.Day18 do
-  @moduledoc false
+  @moduledoc """
+  Interesting day. First part could be solved by trying flood fill directly, checking if the
+  points should be filled by using the raycasting technique from day 10.
+
+  Second day cannot be bruteforced so must solve using shoelace formula (finding the area within
+  the polygon) and then adding to half the perimeter + 1 (pick's theorem)
+  """
   use AOC.Solution
 
   require Integer
