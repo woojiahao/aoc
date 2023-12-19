@@ -61,31 +61,6 @@ defmodule AOC.Y2023.Day19 do
     |> General.map_sum(fn {%{"x" => x, "m" => m, "a" => a, "s" => s}, _} -> x + m + a + s end)
   end
 
-  @impl true
-  def part_two({workflows, _}) do
-    chunk_size = 10
-
-    |> Task.async_stream(
-      fn i ->
-        from = i * chunk_size + 1
-        to = (i + 1) * chunk_size
-
-        for x <- from..to,
-            m <- from..to,
-            a <- from..to,
-            s <- from..to do
-          process(workflows["in"], %{"x" => x, "m" => m, "a" => a, "s" => s}, workflows)
-        end
-        |> IO.inspect()
-        |> Enum.count(&(&1 == :A))
-      end,
-      max_concurrency: System.schedulers_online() * 2,
-      ordered: false,
-      timeout: :infinity
-    )
-    |> Enum.reduce(0, fn {_, v}, acc -> acc + v end)
-  end
-
   defp process([{:jump, "A"} | _], _, _), do: :A
   defp process([{:jump, "R"} | _], _, _), do: :R
 
@@ -100,4 +75,51 @@ defmodule AOC.Y2023.Day19 do
       process(rest, rating, workflows)
     end
   end
+
+  @impl true
+  def part_two({workflows, _}) do
+    {:ok, agent} = Agent.start_link(fn -> [] end)
+
+    tree(workflows["in"], workflows, [], agent)
+
+    Agent.get(agent, fn content ->
+      content
+      |> General.map_sum(fn steps ->
+        # For each step, we need to constraint x, m, a, s to fit within the path
+        initial =
+          @categories
+          |> Map.new(&{&1, 1..4000})
+
+        Enum.reduce(steps, initial, fn
+          {c, :lt, v}, acc -> Map.update!(acc, c, fn l.._ -> l..(v - 1) end)
+          {c, :gt, v}, acc -> Map.update!(acc, c, fn _..u -> (v + 1)..u end)
+          {c, :lte, v}, acc -> Map.update!(acc, c, fn l.._ -> l..v end)
+          {c, :gte, v}, acc -> Map.update!(acc, c, fn _..u -> v..u end)
+        end)
+        |> Enum.reduce(1, fn {_, l..u}, acc -> acc * (u - l + 1) end)
+      end)
+    end)
+  end
+
+  defp tree([{:jump, "A"} | _], _, path, agent), do: Agent.update(agent, &(&1 ++ [path]))
+  defp tree([{:jump, "R"} | _], _, _, _), do: nil
+
+  defp tree([{:jump, next} | _], workflows, path, agent),
+    do: tree(workflows[next], workflows, path, agent)
+
+  defp tree([{:conditional, c, v, cmp, o} | rest], workflows, path, agent) do
+    # Negative case
+    if o == "A" do
+      Agent.update(agent, &(&1 ++ [path ++ [{c, cmp, v}]]))
+    end
+
+    if o != "R" and o != "A" do
+      tree(workflows[o], workflows, path ++ [{c, cmp, v}], agent)
+    end
+
+    tree(rest, workflows, path ++ [{c, inverse_cmp(cmp), v}], agent)
+  end
+
+  defp inverse_cmp(:lt), do: :gte
+  defp inverse_cmp(:gt), do: :lte
 end
