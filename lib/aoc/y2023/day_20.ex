@@ -12,6 +12,7 @@ defmodule AOC.Y2023.Day20 do
   @delimiter " -> "
   @type pulse_type :: {binary(), binary(), number()}
   @final "rx"
+  @press_signal {"button", "broadcaster", 0}
 
   @impl true
   def load_data() do
@@ -50,7 +51,7 @@ defmodule AOC.Y2023.Day20 do
   @impl true
   def part_one(data) do
     Enum.reduce(1..1000, {data, 0, 0}, fn _, {acc, lows, highs} ->
-      press([{"button", "broadcaster", 0}], acc, lows, highs)
+      press([@press_signal], acc, lows, highs)
     end)
     |> then(fn {_, l, h} -> l * h end)
   end
@@ -76,45 +77,37 @@ defmodule AOC.Y2023.Day20 do
       |> Enum.map(&elem(&1, 0))
     end
 
-    # One level depth -> direct parent of rx
     parent = find_parent_modules.(@final) |> List.first()
-
-    # Two level depth -> grandparents of rx
     grandparents = find_parent_modules.(parent)
 
-    # We want to get the earliest press that causes each grandparent to transmit a high pulse
-    :ets.new(:times, [:protected, :set, :named_table])
+    Stream.transform(1..5000, {data, grandparents, []}, fn
+      _, {_, _, found} = acc when length(found) == length(grandparents) ->
+        {:halt, acc}
 
-    Stream.iterate({1, data, grandparents}, fn {i, modules, tracked} ->
-      {pressed_modules, found} =
-        tracked_press([{"button", "broadcaster", 0}], modules, grandparents, [])
+      i, {modules, to_find, found} ->
+        {p_modules, p_found} = tracked_press([@press_signal], modules, to_find, [])
+        u_found = found ++ Enum.map(p_found, &{&1, i})
 
-      Set.list_difference(tracked, found)
-
-      Enum.each(found, fn f -> :ets.insert(:times, {f, i}) end)
-
-      {i + 1, pressed_modules, Set.list_difference(tracked, found)}
+        {
+          [u_found],
+          {p_modules, Set.list_difference(to_find, p_found), u_found}
+        }
     end)
-    |> Stream.take_while(fn {_, _, tracked} -> length(tracked) > 0 end)
-    |> Stream.run()
-
-    times = :ets.tab2list(:times) |> Enum.map(&elem(&1, 1)) |> Math.lcm()
-
-    :ets.delete(:times)
-
-    times
+    |> Enum.to_list()
+    |> List.last()
+    |> General.map_product(&elem(&1, 1))
   end
 
   defp tracked_press([], modules, _, found), do: {modules, found}
 
-  defp tracked_press(signals, modules, grandparents, found) do
+  defp tracked_press(signals, modules, to_find, found) do
     signals
     |> Enum.reduce({modules, []}, fn a, b -> recv(a, b) end)
     |> then(fn {modules, signals} ->
       # If the senders include the grandparents to track and they send a high pulse
       high_pulse_senders = signals |> Enum.filter(&(elem(&1, 2) == 1)) |> Enum.map(&elem(&1, 0))
-      grandparent_senders = Set.list_intersection(grandparents, high_pulse_senders)
-      tracked_press(signals, modules, grandparents, found ++ grandparent_senders)
+      found_senders = Set.list_intersection(to_find, high_pulse_senders)
+      tracked_press(signals, modules, to_find, found ++ found_senders)
     end)
   end
 

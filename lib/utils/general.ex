@@ -57,6 +57,12 @@ defmodule Utils.General do
     |> Enum.sum()
   end
 
+  def map_product(lst, map_fn) do
+    lst
+    |> Enum.map(&map_fn.(&1))
+    |> Enum.product()
+  end
+
   @spec map_max(list(any()), (any() -> number())) :: number()
   def map_max(lst, map_fn) do
     lst
