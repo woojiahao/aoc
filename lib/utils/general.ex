@@ -95,4 +95,12 @@ defmodule Utils.General do
 
   @spec cols_count(list(list(any()))) :: integer()
   def cols_count(matrix), do: matrix |> Enum.at(0) |> length()
+
+  def merge_if(map, predicate, other) do
+    if predicate do
+      Map.merge(map, other)
+    else
+      map
+    end
+  end
 end
