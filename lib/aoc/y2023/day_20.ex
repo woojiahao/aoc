@@ -50,9 +50,11 @@ defmodule AOC.Y2023.Day20 do
 
   @impl true
   def part_one(data) do
-    Enum.reduce(1..1000, {data, 0, 0}, fn _, {acc, lows, highs} ->
-      press([@press_signal], acc, lows, highs)
-    end)
+    1..1000
+    |> Enum.reduce(
+      {data, 0, 0},
+      fn _, {acc, lows, highs} -> press([@press_signal], acc, lows + 1, highs) end
+    )
     |> then(fn {_, l, h} -> l * h end)
   end
 
@@ -80,7 +82,8 @@ defmodule AOC.Y2023.Day20 do
     parent = find_parent_modules.(@final) |> List.first()
     grandparents = find_parent_modules.(parent)
 
-    Stream.transform(1..5000, {data, grandparents, []}, fn
+    1..5000
+    |> Stream.transform({data, grandparents, []}, fn
       _, {_, _, found} = acc when length(found) == length(grandparents) ->
         {:halt, acc}
 
