@@ -14,7 +14,7 @@ defmodule AOC.Y2023.Day5 do
       "light-to-temperature map:\n" <> light_to_temperature,
       "temperature-to-humidity map:\n" <> temperature_to_humidity,
       "humidity-to-location map:\n" <> humidity_to_location
-    ] = Data.load_day(5, "\n\n")
+    ] = Data.load_day(2023, 5, "\n\n")
 
     processed_seeds = seeds |> String.split(" ", trim: true) |> Enum.map(&String.to_integer/1)
     sts = process_map(seed_to_soil)

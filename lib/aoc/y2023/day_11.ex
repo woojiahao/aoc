@@ -5,7 +5,7 @@ defmodule AOC.Y2023.Day11 do
 
   @impl true
   def load_data do
-    Data.load_day_as_grid(11)
+    Data.load_day_as_grid(2023, 11)
     |> then(fn {grid, m, n} ->
       galaxies =
         grid |> Enum.filter(&(elem(&1, 1) == "#")) |> Enum.map(&elem(&1, 0))

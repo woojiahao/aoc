@@ -5,7 +5,7 @@ defmodule AOC.Y2023.Day4 do
 
   @impl true
   def load_data do
-    Data.load_day(4)
+    Data.load_day(2023, 4)
     |> Enum.map(&parse_row/1)
   end
 

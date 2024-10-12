@@ -16,7 +16,7 @@ defmodule AOC.Y2023.Day20 do
 
   @impl true
   def load_data() do
-    Data.load_day(20)
+    Data.load_day(2023, 20)
     |> Enum.map(fn
       "%" <> rest -> {:ff, rest}
       "&" <> rest -> {:co, rest}

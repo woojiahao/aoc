@@ -7,7 +7,7 @@ defmodule AOC.Y2023.Day7 do
 
   @impl true
   def load_data do
-    Data.load_day(7)
+    Data.load_day(2023, 7)
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(fn [hand, bid] -> [hand, String.to_integer(bid)] end)
   end

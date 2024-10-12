@@ -5,7 +5,7 @@ defmodule AOC.Y2023.Day6 do
 
   @impl true
   def load_data do
-    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(6)
+    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(2023, 6)
     Enum.zip(parse_row(time), parse_row(distance))
   end
 
@@ -25,7 +25,7 @@ defmodule AOC.Y2023.Day6 do
 
   @impl true
   def part_two(_data) do
-    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(6)
+    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(2023, 6)
     time = time |> String.replace(" ", "") |> String.to_integer()
     distance = distance |> String.replace(" ", "") |> String.to_integer()
     ways_to_win({time, distance})

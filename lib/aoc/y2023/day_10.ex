@@ -14,7 +14,7 @@ defmodule AOC.Y2023.Day10 do
 
   @impl true
   def load_data do
-    Data.load_day(10)
+    Data.load_day(2023, 10)
     |> Enum.map(&String.split(&1, "", trim: true))
     |> then(&to_graph/1)
     |> then(fn {graph, m, n} ->

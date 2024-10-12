@@ -1,17 +1,18 @@
 defmodule Utils.Data do
   @moduledoc false
 
-  def load_day(day, split),
+  @spec load_day(integer(), integer(), String.t()) :: any()
+  def load_day(year, day, split),
     do:
-      Path.join([:code.priv_dir(:aoc), Integer.to_string(Date.utc_today().year), "day#{day}.txt"])
+      Path.join([:code.priv_dir(:aoc), Integer.to_string(year), "day#{day}.txt"])
       |> File.read!()
       |> String.split(split)
 
-  def load_day(day), do: load_day(day, "\n")
+  def load_day(year, day), do: load_day(year, day, "\n")
 
-  def load_day_as_grid(day),
+  def load_day_as_grid(year, day),
     do:
-      load_day(day)
+      load_day(year, day)
       |> Enum.map(&String.split(&1, "", trim: true))
       |> then(&create_grid/1)
 

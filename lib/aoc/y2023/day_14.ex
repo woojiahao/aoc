@@ -5,7 +5,7 @@ defmodule AOC.Y2023.Day14 do
   @upper 1_000_000_000
 
   @impl true
-  def load_data(), do: Data.load_day_as_grid(14)
+  def load_data(), do: Data.load_day_as_grid(2023, 14)
 
   @impl true
   def part_one({grid, m, n}), do: grid |> tilt(m, n, :up) |> calculate_load(m)

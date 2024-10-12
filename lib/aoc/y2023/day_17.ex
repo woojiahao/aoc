@@ -4,7 +4,7 @@ defmodule AOC.Y2023.Day17 do
 
   @impl true
   def load_data() do
-    # Data.load_day_as_grid(17)
+    # Data.load_day_as_grid(2023, 17)
     # |> then(fn {grid, m, n} ->
     #   {Map.new(grid, fn {k, v} -> {k, String.to_integer(v)} end), m, n}
     # end)

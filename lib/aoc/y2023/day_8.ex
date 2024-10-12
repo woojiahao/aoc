@@ -4,7 +4,7 @@ defmodule AOC.Y2023.Day8 do
 
   @impl true
   def load_data do
-    Data.load_day(8, "\n\n")
+    Data.load_day(2023, 8, "\n\n")
     |> then(fn [instructions, map] ->
       [
         String.split(instructions, "", trim: true),

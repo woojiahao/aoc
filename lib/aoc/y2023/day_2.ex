@@ -9,7 +9,7 @@ defmodule AOC.Y2023.Day2 do
 
   @impl true
   def load_data do
-    Data.load_day(2) |> Enum.map(&parse_line/1)
+    Data.load_day(2023, 2) |> Enum.map(&parse_line/1)
   end
 
   defp parse_line("Game " <> game) do

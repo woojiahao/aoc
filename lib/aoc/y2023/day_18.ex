@@ -19,7 +19,7 @@ defmodule AOC.Y2023.Day18 do
 
   @impl true
   def load_data() do
-    Data.load_day(18)
+    Data.load_day(2023, 18)
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(fn [dir, amt, "(#" <> <<hex::binary-6>> <> ")"] ->
       {dir, String.to_integer(amt), hex}

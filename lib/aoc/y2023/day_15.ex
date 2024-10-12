@@ -4,7 +4,7 @@ defmodule AOC.Y2023.Day15 do
 
   @impl true
   def load_data() do
-    Data.load_day(15)
+    Data.load_day(2023, 15)
     |> List.first()
     |> String.split(",", trim: true)
   end

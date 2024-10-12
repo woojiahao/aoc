@@ -5,7 +5,7 @@ defmodule AOC.Y2022.Day19 do
 
   @impl true
   def load_data() do
-    Data.load_day(19)
+    Data.load_day(2022, 19)
   end
 
   @impl true

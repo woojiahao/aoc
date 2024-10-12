@@ -4,7 +4,7 @@ defmodule AOC.Y2023.Day12 do
 
   @impl true
   def load_data do
-    Data.load_day(12)
+    Data.load_day(2023, 12)
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(fn [springs, damaged] ->
       [

@@ -14,7 +14,7 @@ defmodule AOC.Y2023.Day19 do
   @impl true
   def load_data() do
     [workflows, ratings] =
-      Data.load_day(19, "\n\n")
+      Data.load_day(2023, 19, "\n\n")
       |> Enum.map(&String.split(&1, "\n", trim: true))
 
     parsed_workflows = Map.new(workflows, &parse_workflow/1)

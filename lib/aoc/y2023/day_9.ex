@@ -4,7 +4,7 @@ defmodule AOC.Y2023.Day9 do
 
   @impl true
   def load_data do
-    Data.load_day(9)
+    Data.load_day(2023, 9)
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(&Enum.map(&1, fn v -> String.to_integer(v) end))
     |> Enum.map(&get_diffs(&1, [General.first_last_tuple(&1)]))
