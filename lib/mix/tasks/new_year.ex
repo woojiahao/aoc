@@ -29,7 +29,7 @@ defmodule Mix.Tasks.NewYear do
 
         @impl true
         def load_data() do
-          Data.load_day(#{i})
+          Data.load_day(#{year}, #{i})
         end
 
         @impl true
