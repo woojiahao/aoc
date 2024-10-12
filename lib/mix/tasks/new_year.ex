@@ -33,13 +33,13 @@ defmodule Mix.Tasks.NewYear do
         end
 
         @impl true
-        def part_one(data) do
-          raise "Part 1 not implemented for #{year} day #{i}"
+        def part_one(_data) do
+          :not_implemented
         end
 
         @impl true
-        def part_two(data) do
-          raise "Part 2 not implemented for #{year} day #{i}"
+        def part_two(_data) do
+          :not_implemented
         end
       end
       """)

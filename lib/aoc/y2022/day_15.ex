@@ -9,12 +9,12 @@ defmodule AOC.Y2022.Day15 do
   end
 
   @impl true
-  def part_one(data) do
-    raise "Part 1 not implemented for 2022 day 15"
+  def part_one(_data) do
+    :not_implemented
   end
 
   @impl true
-  def part_two(data) do
-    raise "Part 2 not implemented for 2022 day 15"
+  def part_two(_data) do
+    :not_implemented
   end
 end
