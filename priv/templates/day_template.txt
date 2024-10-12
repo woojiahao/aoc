@@ -1,0 +1,18 @@
+defmodule AOC.Y2023.Day1 do
+  @moduledoc false
+
+  use AOC.Solution
+
+  @impl true
+  def load_data() do
+    Data.load_day(1)
+  end
+
+  @impl true
+  def part_one(data) do
+  end
+
+  @impl true
+  def part_two(data) do
+  end
+end
