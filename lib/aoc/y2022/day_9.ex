@@ -16,12 +16,13 @@ defmodule AOC.Y2022.Day9 do
     Data.load_day(2022, 9)
     |> Enum.map(&String.split(&1, " "))
     |> Enum.map(fn [dir, dist] -> {dir, String.to_integer(dist)} end)
+    |> Enum.flat_map(fn {dir, dist} -> for _ <- 1..dist, do: dir end)
   end
 
   @impl true
   def part_one(data) do
     data
-    |> move(@start_pos, @start_pos)
+    |> move_many(@start_pos, [@start_pos])
     |> MapSet.size()
   end
 
@@ -36,60 +37,31 @@ defmodule AOC.Y2022.Day9 do
 
   defp move_many([], _head, _tails), do: MapSet.new([@start_pos])
 
-  defp move_many([{dir, dist} | rest], {hx, hy}, tails) do
+  defp move_many([dir | rest], {hx, hy}, tails) do
     {hdx, hdy} = @dir_mapping[dir]
-    new_head = {hx + hdx * dist, hy + hdy * dist}
+    new_head = {hx + hdx, hy + hdy}
 
     tails
-    |> Enum.reduce({[new_head], MapSet.new([])}, fn tail,
-                                                    {[cur_head | _rest] = new_positions,
-                                                     all_tail_positions} ->
-      cur_head |> IO.inspect(label: "current head")
-      {new_tail, tail_positions} = move_tail(dir, cur_head, tail) |> IO.inspect(label: "moved")
-      {[new_tail] ++ new_positions, MapSet.union(tail_positions, all_tail_positions)}
+    |> Enum.reduce([new_head], fn tail, [cur_head | _rest] = new_tails ->
+      new_tail = try_keep_up(cur_head, tail)
+      [new_tail | new_tails]
     end)
-    |> then(fn {new_tails_with_head, tail_positions} ->
-      [head | new_tails] = Enum.reverse(new_tails_with_head)
-      new_tails |> IO.inspect(label: "new tails")
-      tail_positions |> IO.inspect(label: "tail positions")
-      MapSet.union(tail_positions, move_many(rest, head, new_tails))
+    |> then(fn tails_with_head ->
+      [head | new_tails] = Enum.reverse(tails_with_head)
+      MapSet.put(move_many(rest, head, new_tails), List.last(new_tails))
     end)
   end
 
-  defp move([], _head, _tail), do: MapSet.new([@start_pos])
-
-  defp move([{dir, dist} | rest], {hx, hy}, tail) do
-    {hdx, hdy} = @dir_mapping[dir]
-    new_head = {hx + hdx * dist, hy + hdy * dist}
-    {new_tail, tail_positions} = move_tail(dir, new_head, tail)
-    MapSet.union(tail_positions, move(rest, new_head, new_tail))
+  defp try_keep_up(head, tail) do
+    if connected?(head, tail), do: tail, else: keep_up(head, tail)
   end
 
-  defp move_tail(dir, {hnx, hny} = head, tail) do
-    {hdx, hdy} = @dir_mapping[dir]
-    # head |> IO.inspect(label: "head")
-    # tail |> IO.inspect(label: "tail")
-
-    if connected?(head, tail) do
-      {tail, MapSet.new([])}
-    else
-      new_tail = {hnx + -1 * hdx, hny + -1 * hdy}
-
-      {new_tail,
-       get_tail_path(dir, tail, new_tail, head)
-       |> MapSet.new()}
-    end
-  end
-
-  defp get_tail_path("U", {_tx, ty}, {_tnx, tny}, {hnx, _hny}),
-    do: for(y <- (ty + 1)..tny, do: {hnx, y})
-
-  defp get_tail_path("D", {_tx, ty}, {_tnx, tny}, {hnx, _hny}),
-    do: for(y <- tny..(ty - 1), do: {hnx, y})
-
-  defp get_tail_path("L", {tx, _ty}, {tnx, _tny}, {_hnx, hny}),
-    do: for(x <- tnx..(tx - 1), do: {x, hny})
-
-  defp get_tail_path("R", {tx, _ty}, {tnx, _tny}, {_hnx, hny}),
-    do: for(x <- (tx + 1)..tnx, do: {x, hny})
+  defp keep_up({hx, hy}, {tx, ty}) when hx == tx and hy > ty, do: {tx, ty + 1}
+  defp keep_up({hx, hy}, {tx, ty}) when hx == tx and hy < ty, do: {tx, ty - 1}
+  defp keep_up({hx, hy}, {tx, ty}) when hy == ty and hx > tx, do: {tx + 1, ty}
+  defp keep_up({hx, hy}, {tx, ty}) when hy == ty and hx < tx, do: {tx - 1, ty}
+  defp keep_up({hx, hy}, {tx, ty}) when hx > tx and hy > ty, do: {tx + 1, ty + 1}
+  defp keep_up({hx, hy}, {tx, ty}) when hx > tx and hy < ty, do: {tx + 1, ty - 1}
+  defp keep_up({hx, hy}, {tx, ty}) when hx < tx and hy > ty, do: {tx - 1, ty + 1}
+  defp keep_up({hx, hy}, {tx, ty}) when hx < tx and hy < ty, do: {tx - 1, ty - 1}
 end
