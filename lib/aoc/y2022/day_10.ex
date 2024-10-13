@@ -9,10 +9,9 @@ defmodule AOC.Y2022.Day10 do
   @impl true
   def load_data() do
     Data.load_day(2022, 10)
-    |> Enum.map(&String.split(&1, " "))
     |> Enum.reduce([1], fn
-      ["addx", v], [p | _] = acc -> [p + String.to_integer(v), p] ++ acc
-      ["noop"], [p | _] = acc -> [p] ++ acc
+      "addx " <> v, [p | _] = acc -> [p + String.to_integer(v), p] ++ acc
+      "noop", [p | _] = acc -> [p] ++ acc
     end)
     |> Enum.reverse()
   end

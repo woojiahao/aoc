@@ -4,9 +4,7 @@ defmodule AOC.Y2022.Day12 do
   use AOC.Solution
   import Utils.String, [:ord]
   import Utils.General, [:map_min]
-  import Utils.Math, [:inf]
-
-  @dirs [{1, 0}, {-1, 0}, {0, 1}, {0, -1}]
+  import Utils.Graph, [:bfs_path_length]
 
   @impl true
   def load_data() do
@@ -18,7 +16,7 @@ defmodule AOC.Y2022.Day12 do
 
   @impl true
   def part_one({grid, start_pos, end_pos, m, n}) do
-    bfs(grid, [start_pos], end_pos, MapSet.new([start_pos]), m, n)
+    bfs(grid, start_pos, end_pos, m, n)
   end
 
   @impl true
@@ -26,33 +24,18 @@ defmodule AOC.Y2022.Day12 do
     grid
     |> Enum.filter(fn {_coord, v} -> v == "a" end)
     |> Enum.map(&elem(&1, 0))
-    |> map_min(&bfs(grid, [&1], end_pos, MapSet.new([&1]), m, n))
+    |> map_min(&bfs(grid, &1, end_pos, m, n))
   end
 
-  defp bfs(_, [], _, _, _, _), do: inf()
-
-  defp bfs(grid, frontier, end_pos, visited, m, n) do
-    if Enum.member?(frontier, end_pos) do
-      0
-    else
-      new_frontier = generate_frontier(grid, frontier, visited, m, n)
-      new_visited = MapSet.union(visited, MapSet.new(new_frontier))
-      bfs(grid, new_frontier, end_pos, new_visited, m, n) + 1
-    end
-  end
-
-  defp generate_frontier(grid, frontier, visited, m, n) do
-    frontier
-    |> Enum.flat_map(fn {r, c} ->
-      Enum.map(@dirs, fn {dr, dc} -> {{dr + r, dc + c}, {r, c}} end)
-    end)
-    |> Enum.reject(fn {{nr, nc} = neighbor, cur} ->
-      nr not in 0..(m - 1) or
-        nc not in 0..(n - 1) or
-        MapSet.member?(visited, neighbor) or
-        ord(grid[neighbor]) - ord(grid[cur]) > 1
-    end)
-    |> Enum.map(&elem(&1, 0))
-    |> Enum.uniq()
+  defp bfs(grid, start_pos, end_pos, m, n) do
+    bfs_path_length(
+      grid,
+      [start_pos],
+      MapSet.new([start_pos]),
+      m,
+      n,
+      fn neighbor, cur -> ord(grid[neighbor]) - ord(grid[cur]) <= 1 end,
+      fn frontier -> Enum.member?(frontier, end_pos) end
+    )
   end
 end
