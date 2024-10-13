@@ -37,8 +37,7 @@ defmodule AOC.Y2022.Day8 do
     |> Stream.take_while(fn {a, b} = cur ->
       cur == {r, c} or (a >= 0 and a < m and b >= 0 and b < n and trees[cur] < trees[{r, c}])
     end)
-    |> Enum.to_list()
-    |> List.last()
+    |> Enum.at(-1)
     |> then(fn {lr, lc} -> lr == 0 or lr == m - 1 or lc == 0 or lc == n - 1 end)
   end
 
@@ -47,14 +46,13 @@ defmodule AOC.Y2022.Day8 do
     |> Stream.take_while(fn {a, b} = cur ->
       cur == {r, c} or (a >= 0 and a < m and b >= 0 and b < n and trees[cur] < trees[{r, c}])
     end)
-    |> Enum.to_list()
     |> Enum.reverse()
-    |> then(fn [{lr, lc} | _rest] = l ->
-      if lr == 0 or lr == m - 1 or lc == 0 or lc == n - 1 do
+    |> then(fn
+      [{lr, lc} | _rest] = l when lr == 0 or lr == m - 1 or lc == 0 or lc == n - 1 ->
         Enum.count(l) - 1
-      else
+
+      l ->
         Enum.count(l)
-      end
     end)
   end
 end

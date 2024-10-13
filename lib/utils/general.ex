@@ -93,7 +93,7 @@ defmodule Utils.General do
 
   @spec zip_neighbor(list(any())) :: [{any(), any()}]
   def zip_neighbor(lst) do
-    Enum.zip(lst, Enum.slice(lst, 1..-1))
+    Enum.zip(lst, Enum.slice(lst, 1..-1//1))
   end
 
   @spec rows_count(list(list(any()))) :: integer()
