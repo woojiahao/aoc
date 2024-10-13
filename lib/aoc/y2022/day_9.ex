@@ -21,19 +21,18 @@ defmodule AOC.Y2022.Day9 do
 
   @impl true
   def part_one(data) do
-    data
-    |> move_many(@start_pos, [@start_pos])
-    |> MapSet.size()
+    move(data, 1)
   end
 
   @impl true
   def part_two(data) do
-    data
-    |> move_many(@start_pos, List.duplicate(@start_pos, 9))
-    |> MapSet.size()
+    move(data, 9)
   end
 
   defp connected?({hx, hy}, {tx, ty}), do: abs(hx - tx) <= 1 and abs(hy - ty) <= 1
+
+  defp move(moves, tail_knots),
+    do: move_many(moves, @start_pos, List.duplicate(@start_pos, tail_knots)) |> MapSet.size()
 
   defp move_many([], _head, _tails), do: MapSet.new([@start_pos])
 
@@ -43,8 +42,7 @@ defmodule AOC.Y2022.Day9 do
 
     tails
     |> Enum.reduce([new_head], fn tail, [cur_head | _rest] = new_tails ->
-      new_tail = try_keep_up(cur_head, tail)
-      [new_tail | new_tails]
+      [try_keep_up(cur_head, tail) | new_tails]
     end)
     |> then(fn tails_with_head ->
       [head | new_tails] = Enum.reverse(tails_with_head)
