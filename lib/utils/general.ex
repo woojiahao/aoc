@@ -109,4 +109,13 @@ defmodule Utils.General do
       map
     end
   end
+
+  def generate_coord_list(m, n) do
+    for i <- 0..(m - 1) do
+      for j <- 0..(n - 1) do
+        {i, j}
+      end
+    end
+    |> Enum.flat_map(& &1)
+  end
 end
