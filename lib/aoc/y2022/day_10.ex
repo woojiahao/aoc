@@ -10,11 +10,10 @@ defmodule AOC.Y2022.Day10 do
   def load_data() do
     Data.load_day(2022, 10)
     |> Enum.map(&String.split(&1, " "))
-    |> Enum.flat_map(fn
-      ["addx", v] -> [0, String.to_integer(v)]
-      ["noop"] -> [0]
+    |> Enum.reduce([1], fn
+      ["addx", v], [p | _] = acc -> [p + String.to_integer(v), p] ++ acc
+      ["noop"], [p | _] = acc -> [p] ++ acc
     end)
-    |> Enum.reduce([{1, 1}], fn v, [{cycle, x} | _rest] = acc -> [{cycle + 1, x + v} | acc] end)
     |> Enum.reverse()
   end
 
@@ -24,7 +23,7 @@ defmodule AOC.Y2022.Day10 do
   @impl true
   def part_two(data), do: draw_crt(data)
 
-  defp get_cycle(data, cycle), do: data |> Enum.at(cycle - 1) |> elem(1)
+  defp get_cycle(data, cycle), do: Enum.at(data, cycle - 1)
 
   defp draw_crt(data),
     do: draw(data, 1, []) |> Enum.map_join("\n", fn row -> Enum.join(row, "") end)
