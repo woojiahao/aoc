@@ -20,13 +20,10 @@ Install the dependencies
 mix deps.get
 ```
 
-Create new subfolders for the year
+Create a new year. The task automatically generates the files and content to start
 
 ```sh
-mkdir lib/aoc/y<year>
-mkdir priv/<year>
+mix new_year <year>
 ```
 
-Create the solution for the day
-
-```sh
+Create the solution for the day in `lib/aoc/y<year>/day_<day>.ex` and the data in `priv/<year>/day<day>.txt`.
