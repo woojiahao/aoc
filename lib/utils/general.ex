@@ -118,4 +118,10 @@ defmodule Utils.General do
     end
     |> Enum.flat_map(& &1)
   end
+
+  def parse_space_delimited_matrix(data) do
+    data
+    |> String.split("\n")
+    |> Enum.map(fn row -> Regex.split(~r/\s+/, row, trim: true) end)
+  end
 end
