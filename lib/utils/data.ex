@@ -6,6 +6,7 @@ defmodule Utils.Data do
     do:
       Path.join([:code.priv_dir(:aoc), Integer.to_string(year), "day#{day}.txt"])
       |> File.read!()
+      |> String.trim()
       |> String.split(split)
 
   def load_day(year, day), do: load_day(year, day, "\n")
