@@ -11,10 +11,10 @@ defmodule Utils.Data do
 
   def load_day(year, day), do: load_day(year, day, "\n")
 
-  def load_day_as_grid(year, day),
+  def load_day_as_grid(year, day, line_delimiter \\ ""),
     do:
       load_day(year, day)
-      |> Enum.map(&String.split(&1, "", trim: true))
+      |> Enum.map(&String.split(&1, line_delimiter, trim: true))
       |> then(&create_grid/1)
 
   defp create_grid(points) do
