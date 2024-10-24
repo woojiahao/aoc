@@ -2,8 +2,6 @@ defmodule AOC.Y2021.Day9 do
   @moduledoc false
 
   use AOC.Solution
-  import Utils.Math, [:inf]
-  import Utils.General, [:map_sum]
 
   @dirs [{1, 0}, {-1, 0}, {0, 1}, {0, -1}]
 
@@ -19,23 +17,22 @@ defmodule AOC.Y2021.Day9 do
   def part_one({grid, _, _}) do
     grid
     |> Enum.filter(fn {coord, _} -> low_point?(grid, coord) end)
-    |> map_sum(&(elem(&1, 1) + 1))
+    |> General.map_sum(&(elem(&1, 1) + 1))
   end
 
   @impl true
   def part_two({grid, m, n}) do
     grid
-    |> Enum.filter(fn {coord, _} -> low_point?(grid, coord) end)
     |> Enum.map(fn {coord, _} -> coord end)
-    |> Enum.map(fn coord -> bfs([coord], MapSet.new([coord]), grid, m, n) end)
-    |> Enum.sort(:desc)
-    |> Enum.slice(0..2//1)
+    |> Enum.filter(&low_point?(grid, &1))
+    |> Enum.map(&bfs([&1], MapSet.new([&1]), grid, m, n))
+    |> General.top_k(3)
     |> Enum.product()
   end
 
   defp low_point?(grid, {r, c}) do
     @dirs
-    |> Enum.map(fn {dr, dc} -> Map.get(grid, {r + dr, c + dc}, inf()) end)
+    |> Enum.map(fn {dr, dc} -> Map.get(grid, {r + dr, c + dc}, Math.inf()) end)
     |> Enum.count(fn v -> grid[{r, c}] < v end) == 4
   end
 

@@ -124,4 +124,8 @@ defmodule Utils.General do
     |> String.split("\n")
     |> Enum.map(fn row -> Regex.split(~r/\s+/, row, trim: true) end)
   end
+
+  def top_k(arr, k) do
+    arr |> Enum.sort(:desc) |> Enum.slice(0..(k - 1)//1)
+  end
 end
