@@ -9,4 +9,12 @@ defmodule Utils.String do
   def chunk_every(s, v) do
     String.split(s, ~r/.{#{v}}/, include_captures: true, trim: true)
   end
+
+  def upper?(s) do
+    s == String.upcase(s)
+  end
+
+  def lower?(s) do
+    s == String.downcase(s)
+  end
 end
