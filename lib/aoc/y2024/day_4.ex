@@ -13,7 +13,6 @@ defmodule AOC.Y2024.Day4 do
     {1, -1},
     {1, 1}
   ]
-  @xmas "XMAS"
 
   @impl true
   def load_data() do
@@ -21,42 +20,36 @@ defmodule AOC.Y2024.Day4 do
   end
 
   @impl true
-  def part_one({grid, m, n}) do
+  def part_one({grid, _, _}) do
     grid
     |> Enum.filter(fn {_, v} -> v == "X" end)
-    |> Enum.map(fn {k, _} -> k end)
-    |> General.map_sum(fn coord -> count_xmas(grid, coord) end)
+    |> General.map_sum(fn {coord, _} -> count_xmas(grid, coord) end)
   end
 
   @impl true
   def part_two({grid, _, _}) do
     grid
     |> Enum.filter(fn {_, v} -> v == "A" end)
-    |> Enum.map(fn {k, _} -> k end)
-    |> Enum.count(fn coord -> has_x_mas(grid, coord) end)
+    |> Enum.count(fn {coord, _} -> has_x_mas(grid, coord) end)
   end
 
   defp has_x_mas(grid, {r, c}) do
     [tl, tr, bl, br] =
-      [{r - 1, c - 1}, {r - 1, c + 1}, {r + 1, c - 1}, {r + 1, c + 1}]
+      @dirs
+      |> Enum.slice(4..-1//1)
+      |> Enum.map(fn {dr, dc} -> {r + dr, c + dc} end)
       |> Enum.map(fn coord -> Map.get(grid, coord, ".") end)
 
-    ((tl == "M" and br == "S") or (tl == "S" and br == "M")) and
-      ((tr == "M" and bl == "S") or (tr == "S" and bl == "M"))
+    ([tl, br] == ["M", "S"] or [tl, br] == ["S", "M"]) and
+      ([tr, bl] == ["M", "S"] or [tr, bl] == ["S", "M"])
   end
 
   defp count_xmas(grid, {r, c}) do
-    for i <- 0..(length(@dirs) - 1) do
-      {dr, dc} = Enum.at(@dirs, i)
-
-      for j <- 0..3 do
-        coord = {r + dr * j, c + dc * j}
-        target = String.at(@xmas, j)
-        v = Map.get(grid, coord, ".")
-        target == v
-      end
-      |> Enum.all?()
+    for {dr, dc} <- @dirs do
+      0..3
+      |> Enum.map(fn j -> {r + dr * j, c + dc * j} end)
+      |> Enum.map_join(fn coord -> Map.get(grid, coord, ".") end)
     end
-    |> Enum.count(fn v -> v == true end)
+    |> Enum.count(fn v -> v == "XMAS" end)
   end
 end
