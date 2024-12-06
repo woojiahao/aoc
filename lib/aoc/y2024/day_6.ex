@@ -29,10 +29,15 @@ defmodule AOC.Y2024.Day6 do
   def part_two({grid, start}) do
     grid
     |> walk(0, start, MapSet.new([]))
-    |> Enum.filter(fn coord -> grid[coord] == "." end)
-    |> General.map_sum(fn coord ->
-      walk2(grid |> Map.put(coord, "#"), 0, start, MapSet.new([]))
+    |> MapSet.to_list()
+    |> Enum.chunk_every(20)
+    |> Task.async_stream(fn chunk ->
+      General.map_sum(chunk, fn coord ->
+        walk2(grid |> Map.put(coord, "#"), 0, start, MapSet.new([]))
+      end)
     end)
+    |> Enum.reduce(0, fn {:ok, result}, acc -> acc + result end)
+    |> Kernel.-(1)
   end
 
   defp walk(grid, dir, {r, c}, visited) do

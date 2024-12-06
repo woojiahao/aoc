@@ -50,7 +50,7 @@ defmodule Utils.General do
     MapSet.new(first) |> MapSet.difference(MapSet.new(second))
   end
 
-  @spec map_sum(list(any()), (any() -> number())) :: number()
+  @spec map_sum(list(any()) | MapSet.t(), (any() -> number())) :: number()
   def map_sum(lst, map_fn) do
     lst
     |> Enum.map(&map_fn.(&1))
