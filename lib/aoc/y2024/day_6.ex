@@ -28,8 +28,8 @@ defmodule AOC.Y2024.Day6 do
   @impl true
   def part_two({grid, start}) do
     grid
-    |> Enum.filter(fn {_, v} -> v == "." end)
-    |> Enum.map(fn {k, _} -> k end)
+    |> walk(0, start, MapSet.new([]))
+    |> Enum.filter(fn coord -> grid[coord] == "." end)
     |> General.map_sum(fn coord ->
       walk2(grid |> Map.put(coord, "#"), 0, start, MapSet.new([]))
     end)
