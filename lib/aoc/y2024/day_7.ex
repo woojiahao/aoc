@@ -25,7 +25,7 @@ defmodule AOC.Y2024.Day7 do
 
   defp solve(data, has_concat) do
     data
-    |> Enum.chunk_every(20)
+    |> Enum.chunk_every(35)
     |> Task.async_stream(fn chunk ->
       chunk
       |> Enum.filter(fn {test_value, numbers} ->
@@ -48,6 +48,11 @@ defmodule AOC.Y2024.Day7 do
   defp form_test_value?([a | [b | rest]], test_value, true) do
     form_test_value?([a * b | rest], test_value, true) or
       form_test_value?([a + b | rest], test_value, true) or
-      form_test_value?([String.to_integer("#{a}#{b}") | rest], test_value, true)
+      form_test_value?([concat(a, flip(0, b)) | rest], test_value, true)
   end
+
+  defp concat(a, 0), do: a
+  defp concat(a, b), do: concat(a * 10 + rem(b, 10), div(b, 10))
+  defp flip(a, 0), do: a
+  defp flip(a, b), do: flip(a * 10 + rem(b, 10), div(b, 10))
 end
