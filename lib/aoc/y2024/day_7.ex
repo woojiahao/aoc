@@ -25,10 +25,15 @@ defmodule AOC.Y2024.Day7 do
 
   defp solve(data, has_concat) do
     data
-    |> Enum.filter(fn {test_value, numbers} ->
-      form_test_value?(numbers, test_value, has_concat)
+    |> Enum.chunk_every(20)
+    |> Task.async_stream(fn chunk ->
+      chunk
+      |> Enum.filter(fn {test_value, numbers} ->
+        form_test_value?(numbers, test_value, has_concat)
+      end)
+      |> General.map_sum(fn {test_value, _} -> test_value end)
     end)
-    |> General.map_sum(fn {test_value, _} -> test_value end)
+    |> Enum.reduce(0, fn {:ok, res}, acc -> acc + res end)
   end
 
   defp form_test_value?([acc | _], test_value, _) when acc > test_value, do: false
