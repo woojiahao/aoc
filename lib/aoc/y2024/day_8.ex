@@ -18,19 +18,18 @@ defmodule AOC.Y2024.Day8 do
 
   @impl true
   def part_one({antennas, m, n}) do
-    antennas
-    |> Enum.flat_map(fn {_, coords} ->
-      find_antinodes(coords, m, n)
-    end)
-    |> Enum.uniq()
-    |> Enum.count()
+    solve(antennas, m, n, &find_antinodes/3)
   end
 
   @impl true
   def part_two({antennas, m, n}) do
+    solve(antennas, m, n, &find_antinodes2/3)
+  end
+
+  defp solve(antennas, m, n, func) do
     antennas
     |> Enum.flat_map(fn {_, coords} ->
-      find_antinodes2(coords, m, n)
+      func.(coords, m, n)
     end)
     |> Enum.uniq()
     |> Enum.count()
