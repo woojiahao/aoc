@@ -73,22 +73,17 @@ defmodule AOC.Y2024.Day8 do
     da_sign = div(a - c, abs(a - c))
     db_sign = div(b - d, abs(b - d))
 
-    left =
-      Stream.iterate({a, b}, fn {x, y} ->
-        {x + da * da_sign, y + db * db_sign}
-      end)
-      |> Stream.take_while(fn {x, y} -> x in 0..(m - 1) and y in 0..(n - 1) end)
-      |> Enum.to_list()
-      |> IO.inspect()
-
-    right =
+    Stream.iterate({a, b}, fn {x, y} ->
+      {x + da * da_sign, y + db * db_sign}
+    end)
+    |> Stream.take_while(fn {x, y} -> x in 0..(m - 1) and y in 0..(n - 1) end)
+    |> Stream.concat(
       Stream.iterate({c, d}, fn {x, y} ->
         {x + da * -da_sign, y + db * -db_sign}
       end)
       |> Stream.take_while(fn {x, y} -> x in 0..(m - 1) and y in 0..(n - 1) end)
-      |> Enum.to_list()
-      |> IO.inspect()
-
-    Enum.concat(left, right)
+    )
+    |> Enum.to_list()
+    |> Enum.uniq()
   end
 end
