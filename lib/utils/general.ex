@@ -42,8 +42,11 @@ defmodule Utils.General do
   Generates all distinct pairs of elements of a list.
   """
   def distinct_pairs(list) do
-    list = Enum.with_index(list)
-    for {x, i} <- list, {y, j} <- list, j > i, do: {x, y}
+    list
+    |> Enum.with_index(1)
+    |> Enum.flat_map(fn {v, i} ->
+      list |> Enum.slice(i..-1//1) |> Enum.map(fn other -> {v, other} end)
+    end)
   end
 
   def list_set_difference(first, second) do

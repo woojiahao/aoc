@@ -37,10 +37,7 @@ defmodule AOC.Y2024.Day8 do
 
   defp find_antinodes(coords, m, n) do
     coords
-    |> Enum.with_index(1)
-    |> Enum.flat_map(fn {coord, i} ->
-      coords |> Enum.slice(i..-1//1) |> Enum.map(fn other -> {coord, other} end)
-    end)
+    |> General.distinct_pairs()
     |> Enum.flat_map(fn {{a, b}, {c, d}} ->
       da = abs(a - c)
       db = abs(b - d)
@@ -57,10 +54,7 @@ defmodule AOC.Y2024.Day8 do
 
   defp find_antinodes2(coords, m, n) do
     coords
-    |> Enum.with_index(1)
-    |> Enum.flat_map(fn {coord, i} ->
-      coords |> Enum.slice(i..-1//1) |> Enum.map(fn other -> {coord, other} end)
-    end)
+    |> General.distinct_pairs()
     |> Enum.flat_map(fn {x, y} ->
       inf_antinodes(x, y, m, n)
     end)
