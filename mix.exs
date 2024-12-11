@@ -20,7 +20,7 @@ defmodule AOC.MixProject do
   defp deps do
     [
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:prioqueue, "~> 0.2.0"}
+      {:arrays, "~> 2.1"}
     ]
   end
 end
