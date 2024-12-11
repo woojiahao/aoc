@@ -28,9 +28,7 @@ defmodule AOC.Y2024.Day8 do
 
   defp solve(antennas, m, n, func) do
     antennas
-    |> Enum.flat_map(fn {_, coords} ->
-      func.(coords, m, n)
-    end)
+    |> Enum.flat_map(fn {_, coords} -> func.(coords, m, n) end)
     |> Enum.uniq()
     |> Enum.count()
   end
