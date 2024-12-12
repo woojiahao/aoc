@@ -37,8 +37,60 @@ defmodule AOC.Y2024.Day12 do
   end
 
   @impl true
-  def part_two(_data) do
-    :not_implemented
+  def part_two({grid, m, n}) do
+    Enum.reduce(General.generate_coord_list(m, n), {MapSet.new([]), 0}, fn coord,
+                                                                           {visited, res} ->
+      if MapSet.member?(visited, coord) do
+        {visited, res}
+      else
+        region = search_region(grid, [coord], MapSet.new([coord]))
+        area = MapSet.size(region)
+        fence = calculate_sides(region)
+        {MapSet.union(visited, region), res + area * fence}
+      end
+    end)
+    |> elem(1)
+  end
+
+  defp calculate_sides(region) do
+    up =
+      region |> Enum.reject(fn {r, c} -> MapSet.member?(region, {r - 1, c}) end) |> MapSet.new()
+
+    down =
+      region |> Enum.reject(fn {r, c} -> MapSet.member?(region, {r + 1, c}) end) |> MapSet.new()
+
+    left =
+      region |> Enum.reject(fn {r, c} -> MapSet.member?(region, {r, c - 1}) end) |> MapSet.new()
+
+    right =
+      region |> Enum.reject(fn {r, c} -> MapSet.member?(region, {r, c + 1}) end) |> MapSet.new()
+
+    Enum.reduce(up, 0, fn {r, c}, acc ->
+      v =
+        [
+          MapSet.member?(left, {r, c}),
+          MapSet.member?(right, {r, c}),
+          MapSet.member?(right, {r - 1, c - 1}) and not MapSet.member?(left, {r, c}),
+          MapSet.member?(left, {r - 1, c + 1}) and not MapSet.member?(right, {r, c})
+        ]
+        |> Enum.count(fn v -> v == true end)
+
+      v + acc
+    end)
+    |> Kernel.+(
+      Enum.reduce(down, 0, fn {r, c}, acc ->
+        v =
+          [
+            MapSet.member?(left, {r, c}),
+            MapSet.member?(right, {r, c}),
+            MapSet.member?(right, {r + 1, c - 1}) and not MapSet.member?(left, {r, c}),
+            MapSet.member?(left, {r + 1, c + 1}) and not MapSet.member?(right, {r, c})
+          ]
+          |> Enum.count(fn v -> v == true end)
+
+        v + acc
+      end)
+    )
   end
 
   defp calculate_perimeter(grid, {r, c} = coord) do
