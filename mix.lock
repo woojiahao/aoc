@@ -7,5 +7,6 @@
   "file_system": {:hex, :file_system, "1.0.1", "79e8ceaddb0416f8b8cd02a0127bdbababe7bf4a23d2a395b983c1f8b3f73edd", [:mix], [], "hexpm", "4414d1f38863ddf9120720cd976fce5bdde8e91d8283353f0e31850fa89feb9e"},
   "insertable": {:hex, :insertable, "1.0.0", "879c7023b5491bbb694dff78422c94faded616fda963e529916343bc6e35162f", [:mix], [{:type_check, "~> 0.8", [hex: :type_check, repo: "hexpm", optional: false]}], "hexpm", "4b3f60169221a1ace67fdfe8b0d3c35708c098e55df549d4a374b9a7b0255af4"},
   "jason": {:hex, :jason, "1.4.4", "b9226785a9aa77b6857ca22832cffa5d5011a667207eb2a0ad56adb5db443b8a", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "c5eb0cab91f094599f94d55bc63409236a8ec69a21a67814529e8d5f6cc90b3b"},
+  "memoize": {:hex, :memoize, "1.4.3", "ead4ba248291acbaecbfe7e68ed762d329dd9c29c727020c7393dda4060c4471", [:mix], [], "hexpm", "a75176b84b9ce92faaf567c82fcbc584ef95727e0827cb38606b0a197f7e47ef"},
   "type_check": {:hex, :type_check, "0.13.7", "33eb757336d6a0414a23e4319f38d02aaded41fb944a25239cce33186f2c9ec2", [:mix], [{:castore, "~> 1.0", [hex: :castore, repo: "hexpm", optional: false]}, {:credo, "~> 1.5", [hex: :credo, repo: "hexpm", optional: true]}, {:stream_data, "~> 1.0", [hex: :stream_data, repo: "hexpm", optional: true]}], "hexpm", "bfb847345f025291f5c2301aa111090df171279a4f7d1f6bc0ec155b0437c712"},
 }

@@ -20,7 +20,8 @@ defmodule AOC.MixProject do
   defp deps do
     [
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:arrays, "~> 2.1"}
+      {:arrays, "~> 2.1"},
+      {:memoize, "~> 1.4"}
     ]
   end
 end
