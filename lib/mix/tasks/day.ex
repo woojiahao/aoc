@@ -28,20 +28,18 @@ defmodule Mix.Tasks.Day do
   end
 
   defp part_one(year, day) do
-    IO.puts("===== YEAR #{year} DAY #{day} PART 1 =====")
-    module = "Elixir.AOC.Y#{year}.Day#{day}"
-    before = :os.system_time(:millisecond)
-    result = apply(String.to_atom(module), :solve_one, [])
-    now = :os.system_time(:millisecond)
-    IO.puts("Result: #{result}")
-    IO.puts("Took: #{now - before}ms")
+    time_part(year, day, "1", :solve_one)
   end
 
   defp part_two(year, day) do
-    IO.puts("===== YEAR #{year} DAY #{day} PART 2 =====")
+    time_part(year, day, "2", :solve_two)
+  end
+
+  defp time_part(year, day, part, func) do
+    IO.puts("===== YEAR #{year} DAY #{day} PART #{part} =====")
     module = "Elixir.AOC.Y#{year}.Day#{day}"
     before = :os.system_time(:millisecond)
-    result = apply(String.to_atom(module), :solve_two, [])
+    result = apply(String.to_atom(module), func, [])
     now = :os.system_time(:millisecond)
     IO.puts("Result: #{result}")
     IO.puts("Took: #{now - before}ms")
