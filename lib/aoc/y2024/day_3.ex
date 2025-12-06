@@ -1,27 +1,28 @@
 defmodule AOC.Y2024.Day3 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 3
 
   @mul_regex ~r/mul\((\d+),(\d+)\)/
   @do_regex ~r/do\(\)/
   @dont_regex ~r/don\'t\(\)/
 
   @impl true
-  def load_data() do
-    Data.load_day(2024, 3)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.join()
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     Regex.scan(@mul_regex, data, capture: :all_but_first)
     |> Enum.map(fn v -> Enum.map(v, &String.to_integer(&1)) end)
     |> General.map_sum(fn [a, b] -> a * b end)
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> get_do_instructions()
     |> Enum.concat(get_dont_instructions(data))

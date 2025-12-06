@@ -1,10 +1,11 @@
 defmodule AOC.Y2023.Day9 do
   @moduledoc false
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 9
 
   @impl true
-  def load_data do
-    Data.load_day(2023, 9)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(&Enum.map(&1, fn v -> String.to_integer(v) end))
     |> Enum.map(&get_diffs(&1, [General.first_last_tuple(&1)]))
@@ -13,12 +14,12 @@ defmodule AOC.Y2023.Day9 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data |> Enum.map(&solve(&1, fn {_, v}, p -> v + p end, 0)) |> Enum.sum()
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data |> Enum.map(&solve(&1, fn {v, _}, p -> v - p end, 0)) |> Enum.sum()
   end
 

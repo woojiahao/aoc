@@ -1,7 +1,7 @@
 defmodule AOC.Y2021.Day4 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 4
   import Utils.Array, [:from_matrix_to_coord_map]
   import Utils.General, [:map_sum, :parse_space_delimited_matrix]
 
@@ -9,8 +9,9 @@ defmodule AOC.Y2021.Day4 do
   @board_height 5
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 4, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> then(fn [calls | boards] ->
       call_numbers = calls |> String.split(",", trim: true) |> Enum.map(&String.to_integer/1)
 
@@ -28,7 +29,7 @@ defmodule AOC.Y2021.Day4 do
   end
 
   @impl true
-  def part_one({calls, boards}) do
+  def part_one({calls, boards}, _opts) do
     calls
     |> Enum.reduce_while(MapSet.new(), fn call, called ->
       updated_called = MapSet.put(called, call)
@@ -51,7 +52,7 @@ defmodule AOC.Y2021.Day4 do
   end
 
   @impl true
-  def part_two({calls, boards}) do
+  def part_two({calls, boards}, _opts) do
     {last_board_idx, last_board_called} =
       calls
       |> Enum.reduce({MapSet.new(), [], []}, fn call, {called_set, called_lst, bingos} ->

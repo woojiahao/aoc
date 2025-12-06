@@ -1,10 +1,11 @@
 defmodule AOC.Y2023.Day8 do
   @moduledoc false
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 8
 
   @impl true
-  def load_data do
-    Data.load_day(2023, 8, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> then(fn [instructions, map] ->
       [
         String.split(instructions, "", trim: true),
@@ -19,7 +20,7 @@ defmodule AOC.Y2023.Day8 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> then(fn [instructions, map] ->
       traverse("AAA", 0, 0, fn el -> el == "ZZZ" end, instructions, map)
@@ -27,7 +28,7 @@ defmodule AOC.Y2023.Day8 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> then(fn [instructions, map] ->
       map

@@ -1,11 +1,12 @@
 defmodule AOC.Y2023.Day4 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 4
 
   @impl true
-  def load_data do
-    Data.load_day(2023, 4)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&parse_row/1)
   end
 
@@ -21,7 +22,7 @@ defmodule AOC.Y2023.Day4 do
     do: numbers |> String.split(" ", trim: true) |> Enum.map(&String.to_integer/1) |> MapSet.new()
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.reduce(0, fn [_card_no, winning, card], acc ->
       matching = MapSet.intersection(winning, card)
@@ -34,7 +35,7 @@ defmodule AOC.Y2023.Day4 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     counter = Map.new(data, fn [card_no, _, _] -> {card_no, 1} end)
 
     data

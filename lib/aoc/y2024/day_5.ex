@@ -1,11 +1,12 @@
 defmodule AOC.Y2024.Day5 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 5
 
   @impl true
-  def load_data() do
-    Data.load_day(2024, 5, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> then(fn [rules, updates] ->
       {
         rules
@@ -20,7 +21,7 @@ defmodule AOC.Y2024.Day5 do
   end
 
   @impl true
-  def part_one({rules, updates}) do
+  def part_one({rules, updates}, _opts) do
     updates
     |> Enum.filter(fn update -> right_order?(rules, update) end)
     |> General.map_sum(fn update ->
@@ -29,7 +30,7 @@ defmodule AOC.Y2024.Day5 do
   end
 
   @impl true
-  def part_two({rules, updates}) do
+  def part_two({rules, updates}, _opts) do
     updates
     |> Enum.reject(fn update -> right_order?(rules, update) end)
     |> Enum.map(fn update ->

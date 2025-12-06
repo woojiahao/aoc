@@ -1,11 +1,11 @@
 defmodule AOC.Y2023.Day6 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 6
 
   @impl true
-  def load_data do
-    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(2023, 6)
+  def load_data(data, _opts) do
+    ["Time:" <> time, "Distance:" <> distance] = data |> String.split("\n")
     Enum.zip(parse_row(time), parse_row(distance))
   end
 
@@ -17,15 +17,15 @@ defmodule AOC.Y2023.Day6 do
       |> Enum.map(&String.to_integer/1)
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.map(&ways_to_win/1)
     |> Enum.product()
   end
 
   @impl true
-  def part_two(_data) do
-    ["Time:" <> time, "Distance:" <> distance] = Data.load_day(2023, 6)
+  def part_two(data, _opts) do
+    ["Time:" <> time, "Distance:" <> distance] = data |> String.split("\n")
     time = time |> String.replace(" ", "") |> String.to_integer()
     distance = distance |> String.replace(" ", "") |> String.to_integer()
     ways_to_win({time, distance})

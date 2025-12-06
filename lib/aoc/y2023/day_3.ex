@@ -1,14 +1,15 @@
 defmodule AOC.Y2023.Day3 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 3
 
   @numbers Enum.map(0..9, &Integer.to_string/1)
   @neighbors [[0, 1], [0, -1], [1, 0], [-1, 0], [-1, 1], [1, 1], [1, -1], [-1, -1]]
 
   @impl true
-  def load_data do
-    Data.load_day(2023, 3)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.split(&1, "", trim: true))
     |> then(fn raw_data ->
       raw_data
@@ -65,7 +66,7 @@ defmodule AOC.Y2023.Day3 do
   defp parse_number(_row, l, acc), do: {l, acc}
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.map(fn row -> Enum.map(row, &elem(&1, 0)) end)
     |> Enum.map(&Enum.sum/1)
@@ -73,7 +74,7 @@ defmodule AOC.Y2023.Day3 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.filter(&(length(&1) > 0))
     |> Enum.map(fn row ->

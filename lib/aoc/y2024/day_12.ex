@@ -1,7 +1,7 @@
 defmodule AOC.Y2024.Day12 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 12
 
   @dirs [
     {-1, 0},
@@ -11,12 +11,14 @@ defmodule AOC.Y2024.Day12 do
   ]
 
   @impl true
-  def load_data() do
-    Data.load_day_as_grid(2024, 12)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
   end
 
   @impl true
-  def part_one({grid, m, n}) do
+  def part_one({grid, m, n}, _opts) do
     Enum.reduce(General.generate_coord_list(m, n), {MapSet.new([]), 0}, fn coord,
                                                                            {visited, res} ->
       if MapSet.member?(visited, coord) do
@@ -37,7 +39,7 @@ defmodule AOC.Y2024.Day12 do
   end
 
   @impl true
-  def part_two({grid, m, n}) do
+  def part_two({grid, m, n}, _opts) do
     Enum.reduce(General.generate_coord_list(m, n), {MapSet.new([]), 0}, fn coord,
                                                                            {visited, res} ->
       if MapSet.member?(visited, coord) do

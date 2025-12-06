@@ -1,11 +1,12 @@
 defmodule AOC.Y2021.Day5 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 5
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 5)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(fn line -> String.split(line, " -> ") end)
     |> Enum.map(fn [from, to] -> {String.split(from, ","), String.split(to, ",")} end)
     |> Enum.map(fn {[a, b], [c, d]} ->
@@ -14,7 +15,7 @@ defmodule AOC.Y2021.Day5 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.reject(fn {{a, b}, {c, d}} -> a != c and b != d end)
     |> Enum.flat_map(fn
@@ -26,7 +27,7 @@ defmodule AOC.Y2021.Day5 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Stream.flat_map(fn
       {{a, b}, {c, d}} when a != c and b != d -> Stream.zip(a..c, b..d)

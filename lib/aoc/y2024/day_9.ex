@@ -1,18 +1,19 @@
 defmodule AOC.Y2024.Day9 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 9
 
   @impl true
-  def load_data() do
-    Data.load_day(2024, 9)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> then(fn [line] ->
       line |> String.split("", trim: true) |> Enum.map(&String.to_integer/1)
     end)
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.reduce({[], false, 0}, fn
       v, {acc, false, i} ->
@@ -33,7 +34,7 @@ defmodule AOC.Y2024.Day9 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.with_index()
     |> Enum.map(fn

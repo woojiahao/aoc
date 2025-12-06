@@ -1,18 +1,19 @@
 defmodule AOC.Y2021.Day3 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 3
   import Utils.Array, [:transpose]
   import Utils.General, [:map_max]
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 3)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.graphemes/1)
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     bit_frequencies = get_bit_frequencies(data)
 
     {gamma, _} =
@@ -33,7 +34,7 @@ defmodule AOC.Y2021.Day3 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     max_length = map_max(data, &length/1)
 
     oxygen_str =

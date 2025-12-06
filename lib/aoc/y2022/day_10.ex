@@ -1,14 +1,15 @@
 defmodule AOC.Y2022.Day10 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 10
   import Utils.General, [:map_sum]
 
   @target_cycles [20, 60, 100, 140, 180, 220]
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 10)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.reduce([1], fn
       "addx " <> v, [p | _] = acc -> [p + String.to_integer(v), p] ++ acc
       "noop", [p | _] = acc -> [p] ++ acc
@@ -17,10 +18,11 @@ defmodule AOC.Y2022.Day10 do
   end
 
   @impl true
-  def part_one(data), do: map_sum(@target_cycles, fn cycle -> cycle * get_cycle(data, cycle) end)
+  def part_one(data, _opts),
+    do: map_sum(@target_cycles, fn cycle -> cycle * get_cycle(data, cycle) end)
 
   @impl true
-  def part_two(data), do: draw_crt(data)
+  def part_two(data, _opts), do: draw_crt(data)
 
   defp get_cycle(data, cycle), do: Enum.at(data, cycle - 1)
 

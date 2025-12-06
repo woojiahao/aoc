@@ -1,26 +1,26 @@
 defmodule AOC.Y2022.Day12 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 12
   import Utils.String, [:ord]
   import Utils.General, [:map_min]
   import Utils.Graph, [:bfs_path_length]
 
   @impl true
-  def load_data() do
-    {grid, m, n} = Data.load_day_as_grid(2022, 12)
+  def load_data(data, _opts) do
+    {grid, m, n} = data |> String.split("\n") |> Data.parse_as_grid()
     start_pos = grid |> Enum.find(fn {_coord, v} -> v == "S" end) |> elem(0)
     end_pos = grid |> Enum.find(fn {_coord, v} -> v == "E" end) |> elem(0)
     {%{grid | start_pos => "a", end_pos => "z"}, start_pos, end_pos, m, n}
   end
 
   @impl true
-  def part_one({grid, start_pos, end_pos, m, n}) do
+  def part_one({grid, start_pos, end_pos, m, n}, _opts) do
     bfs(grid, start_pos, end_pos, m, n)
   end
 
   @impl true
-  def part_two({grid, _start_pos, end_pos, m, n}) do
+  def part_two({grid, _start_pos, end_pos, m, n}, _opts) do
     grid
     |> Enum.filter(fn {_coord, v} -> v == "a" end)
     |> Enum.map(&elem(&1, 0))

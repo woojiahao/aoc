@@ -1,21 +1,22 @@
 defmodule AOC.Y2022.Day13 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 13
   import Utils.General, [:map_sum, :map_product]
 
   @dividers [[[[2]]], [[[6]]]]
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 13, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> Enum.map(fn pair ->
       pair |> String.split("\n") |> Enum.map(&Code.eval_string(&1)) |> Enum.map(&elem(&1, 0))
     end)
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.with_index(1)
     |> Enum.filter(fn {[a, b], _idx} -> compare(a, b) == :lt end)
@@ -23,7 +24,7 @@ defmodule AOC.Y2022.Day13 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     @dividers
     |> Kernel.++(data)
     |> Enum.flat_map(& &1)

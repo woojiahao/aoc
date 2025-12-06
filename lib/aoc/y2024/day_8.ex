@@ -1,11 +1,13 @@
 defmodule AOC.Y2024.Day8 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 8
 
   @impl true
-  def load_data() do
-    Data.load_day_as_grid(2024, 8)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
     |> then(fn {grid, m, n} ->
       antennas =
         grid
@@ -17,12 +19,12 @@ defmodule AOC.Y2024.Day8 do
   end
 
   @impl true
-  def part_one({antennas, m, n}) do
+  def part_one({antennas, m, n}, _opts) do
     solve(antennas, m, n, &find_antinodes/3)
   end
 
   @impl true
-  def part_two({antennas, m, n}) do
+  def part_two({antennas, m, n}, _opts) do
     solve(antennas, m, n, &find_antinodes2/3)
   end
 

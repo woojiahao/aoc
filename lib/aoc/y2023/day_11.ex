@@ -1,11 +1,13 @@
 defmodule AOC.Y2023.Day11 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 11
 
   @impl true
-  def load_data do
-    Data.load_day_as_grid(2023, 11)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
     |> then(fn {grid, m, n} ->
       galaxies =
         grid |> Enum.filter(&(elem(&1, 1) == "#")) |> Enum.map(&elem(&1, 0))
@@ -25,12 +27,12 @@ defmodule AOC.Y2023.Day11 do
   end
 
   @impl true
-  def part_one({galaxies, empty_rows, empty_cols}) do
+  def part_one({galaxies, empty_rows, empty_cols}, _opts) do
     solve(galaxies, empty_rows, empty_cols, 2)
   end
 
   @impl true
-  def part_two({galaxies, empty_rows, empty_cols}) do
+  def part_two({galaxies, empty_rows, empty_cols}, _opts) do
     solve(galaxies, empty_rows, empty_cols, 1_000_000)
   end
 

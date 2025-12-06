@@ -1,18 +1,18 @@
 defmodule AOC.Y2022.Day6 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 6
 
   @window_size_1 4
   @window_size_2 14
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 6) |> hd() |> String.graphemes()
+  def load_data(data, _opts) do
+    data |> String.split("\n") |> hd() |> String.graphemes()
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.with_index()
     |> Enum.reduce_while(%{}, fn
@@ -40,7 +40,7 @@ defmodule AOC.Y2022.Day6 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.with_index()
     |> Enum.reduce_while(%{}, fn

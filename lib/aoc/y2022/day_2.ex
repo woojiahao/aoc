@@ -1,12 +1,13 @@
 defmodule AOC.Y2022.Day2 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 2
   import Utils.String, [:ord]
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 2)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(fn game ->
       [opponent, player] = String.split(game, " ")
       player_score = ord(player) - ord("X") + 1
@@ -16,14 +17,14 @@ defmodule AOC.Y2022.Day2 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.map(fn {player, opponent} -> player + play(player, opponent) end)
     |> Enum.sum()
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.map(fn {outcome, opponent} -> sly(outcome, opponent) + (outcome - 1) * 3 end)
     |> Enum.sum()

@@ -6,7 +6,7 @@ defmodule AOC.Y2023.Day18 do
   Second day cannot be bruteforced so must solve using shoelace formula (finding the area within
   the polygon) and then adding to half the perimeter + 1 (pick's theorem)
   """
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 18
 
   require Integer
 
@@ -18,8 +18,9 @@ defmodule AOC.Y2023.Day18 do
   }
 
   @impl true
-  def load_data() do
-    Data.load_day(2023, 18)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(fn [dir, amt, "(#" <> <<hex::binary-6>> <> ")"] ->
       {dir, String.to_integer(amt), hex}
@@ -27,12 +28,12 @@ defmodule AOC.Y2023.Day18 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     solve(data)
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.map(fn {_, _, <<v::binary-5>> <> w = hex} ->
       amt = String.to_integer(v, 16)

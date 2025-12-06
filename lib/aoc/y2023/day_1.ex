@@ -1,7 +1,7 @@
 defmodule AOC.Y2023.Day1 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 1
 
   @numbers %{
     "one" => 1,
@@ -24,12 +24,12 @@ defmodule AOC.Y2023.Day1 do
                end)
 
   @impl true
-  def load_data() do
-    Data.load_day(2023, 1)
+  def load_data(data, _opts) do
+    data |> String.split("\n")
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.map(fn str ->
       str
@@ -43,7 +43,7 @@ defmodule AOC.Y2023.Day1 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.map(fn str -> [parse_next(str), parse_next(String.reverse(str))] end)
     |> Enum.map(fn [first, last] -> first * 10 + last end)

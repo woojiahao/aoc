@@ -7,7 +7,7 @@ defmodule AOC.Y2023.Day20 do
   &ct, &kp, &ks, &xc -> &bb so each has to send a high pulse
   Find the LCM across all the times for each to send a high pulse to solve
   """
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 20
 
   @delimiter " -> "
   @type pulse_type :: {binary(), binary(), number()}
@@ -15,8 +15,9 @@ defmodule AOC.Y2023.Day20 do
   @press_signal {"button", "broadcaster", 0}
 
   @impl true
-  def load_data() do
-    Data.load_day(2023, 20)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(fn
       "%" <> rest -> {:ff, rest}
       "&" <> rest -> {:co, rest}
@@ -49,7 +50,7 @@ defmodule AOC.Y2023.Day20 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     1..1000
     |> Enum.reduce(
       {data, 0, 0},
@@ -70,7 +71,7 @@ defmodule AOC.Y2023.Day20 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     find_parent_modules = fn parent ->
       data
       |> Enum.filter(fn {_, %{outputs: outputs}} ->

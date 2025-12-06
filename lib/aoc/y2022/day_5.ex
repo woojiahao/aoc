@@ -1,15 +1,16 @@
 defmodule AOC.Y2022.Day5 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 5
   import Utils.String, [:chunk_every]
   import Utils.Array, [:transpose]
 
   @move_regexp ~r/^move (\d+) from (\d+) to (\d+)$/
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 5, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> Enum.map(&String.split(&1, "\n"))
     |> then(fn [crates, moves] ->
       {crates |> Enum.drop(-1) |> parse_crates(), parse_moves(moves)}
@@ -17,7 +18,7 @@ defmodule AOC.Y2022.Day5 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     {crate_count, updated_crates} =
       data
       |> then(fn {{crate_count, crates}, moves} ->
@@ -37,7 +38,7 @@ defmodule AOC.Y2022.Day5 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     {crate_count, updated_crates} =
       data
       |> then(fn {{crate_count, crates}, moves} ->

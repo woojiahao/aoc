@@ -1,11 +1,12 @@
 defmodule AOC.Y2024.Day7 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 7
 
   @impl true
-  def load_data() do
-    Data.load_day(2024, 7)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(fn line -> String.split(line, ": ") end)
     |> Enum.map(fn [test_value, numbers] ->
       {String.to_integer(test_value),
@@ -14,12 +15,12 @@ defmodule AOC.Y2024.Day7 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     solve(data, false)
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     solve(data, true)
   end
 

@@ -1,7 +1,7 @@
 defmodule AOC.Y2022.Day9 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 9
 
   @dir_mapping %{
     "R" => {1, 0},
@@ -12,20 +12,21 @@ defmodule AOC.Y2022.Day9 do
   @start_pos {0, 0}
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 9)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.split(&1, " "))
     |> Enum.map(fn [dir, dist] -> {dir, String.to_integer(dist)} end)
     |> Enum.flat_map(fn {dir, dist} -> for _ <- 1..dist, do: dir end)
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     move(data, 1)
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     move(data, 9)
   end
 

@@ -1,17 +1,18 @@
 defmodule AOC.Y2022.Day3 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 3
   import Utils.String, [:ord]
   import Utils.Set, [:list_intersection]
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 3)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.map(fn line ->
       len = String.length(line)
@@ -29,7 +30,7 @@ defmodule AOC.Y2022.Day3 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.chunk_every(3)
     |> Enum.map(fn [a, b, c] ->

@@ -1,12 +1,13 @@
 defmodule AOC.Y2021.Day8 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 8
   import Utils.General, [:map_sum]
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 8)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(fn line -> String.split(line, "|", trim: true) end)
     |> Enum.map(fn [digits, signal] ->
       {digits |> String.split(" ", trim: true) |> Enum.map(&String.graphemes/1),
@@ -15,7 +16,7 @@ defmodule AOC.Y2021.Day8 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.flat_map(fn {digits, signal} ->
       mapping = decrypt(digits)
@@ -25,7 +26,7 @@ defmodule AOC.Y2021.Day8 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> map_sum(fn {digits, signal} ->
       mapping = decrypt(digits)

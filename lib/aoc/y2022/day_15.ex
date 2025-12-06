@@ -1,14 +1,15 @@
 defmodule AOC.Y2022.Day15 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 15
   import Utils.General, [:map_max, :map_min_max]
 
   @regex ~r/^Sensor at x=([-\d]+), y=([-\d]+): closest beacon is at x=([-\d]+), y=([-\d]+)$/
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 15)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(fn line -> Regex.run(@regex, line, capture: :all_but_first) end)
     |> Enum.map(fn parts -> Enum.map(parts, &String.to_integer/1) end)
     |> then(fn sensors ->
@@ -26,7 +27,7 @@ defmodule AOC.Y2022.Day15 do
   end
 
   @impl true
-  def part_one({grid, radii}) do
+  def part_one({grid, radii}, _opts) do
     {min_x, max_x} = map_min_max(grid, fn {{x, _}, _} -> x end) |> IO.inspect()
     max_r = map_max(radii, fn {_, r} -> r end)
 
@@ -36,7 +37,7 @@ defmodule AOC.Y2022.Day15 do
   end
 
   @impl true
-  def part_two({_grid, radii}) do
+  def part_two({_grid, radii}, _opts) do
     radii
     |> Stream.flat_map(fn {{x, y}, r} ->
       Stream.concat(

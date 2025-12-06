@@ -1,19 +1,20 @@
 defmodule AOC.Y2023.Day13 do
   @moduledoc false
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 13
 
   @impl true
-  def load_data() do
-    Data.load_day(2023, 13, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> Enum.map(&String.split(&1, "\n", trim: true))
     |> Enum.map(&Enum.map(&1, fn line -> String.split(line, "", trim: true) end))
   end
 
   @impl true
-  def part_one(data), do: General.map_sum(data, &solve/1)
+  def part_one(data, _opts), do: General.map_sum(data, &solve/1)
 
   @impl true
-  def part_two(data), do: General.map_sum(data, &solve(&1, true))
+  def part_two(data, _opts), do: General.map_sum(data, &solve(&1, true))
 
   defp solve(pattern, smudge? \\ false) do
     solve(pattern, General.rows_count(pattern), 0, smudge?)

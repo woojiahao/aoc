@@ -1,17 +1,17 @@
 defmodule AOC.Y2023.Day14 do
   @moduledoc false
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 14
 
   @upper 1_000_000_000
 
   @impl true
-  def load_data(), do: Data.load_day_as_grid(2023, 14)
+  def load_data(data, _opts), do: data |> String.split("\n") |> Data.parse_as_grid()
 
   @impl true
-  def part_one({grid, m, n}), do: grid |> tilt(m, n, :up) |> calculate_load(m)
+  def part_one({grid, m, n}, _opts), do: grid |> tilt(m, n, :up) |> calculate_load(m)
 
   @impl true
-  def part_two({grid, m, n}) do
+  def part_two({grid, m, n}, _opts) do
     c =
       0..@upper
       |> Stream.transform(

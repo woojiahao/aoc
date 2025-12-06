@@ -1,7 +1,7 @@
 defmodule AOC.Y2024.Day4 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2024, day: 4
 
   @dirs [
     {-1, 0},
@@ -15,19 +15,21 @@ defmodule AOC.Y2024.Day4 do
   ]
 
   @impl true
-  def load_data() do
-    Data.load_day_as_grid(2024, 4)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
   end
 
   @impl true
-  def part_one({grid, _, _}) do
+  def part_one({grid, _, _}, _opts) do
     grid
     |> Enum.filter(fn {_, v} -> v == "X" end)
     |> General.map_sum(fn {coord, _} -> count_xmas(grid, coord) end)
   end
 
   @impl true
-  def part_two({grid, _, _}) do
+  def part_two({grid, _, _}, _opts) do
     grid
     |> Enum.filter(fn {_, v} -> v == "A" end)
     |> Enum.count(fn {coord, _} -> has_x_mas(grid, coord) end)

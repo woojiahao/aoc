@@ -1,15 +1,16 @@
 defmodule AOC.Y2022.Day14 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 14
   import Utils.General, [:zip_neighbor, :map_min_max]
 
   @excess_floor 150
 
   @impl true
-  def load_data() do
+  def load_data(data, _opts) do
     map =
-      Data.load_day(2022, 14)
+      data
+      |> String.split("\n")
       |> Enum.map(&String.split(&1, " -> "))
       |> Enum.map(fn paths ->
         paths
@@ -36,7 +37,7 @@ defmodule AOC.Y2022.Day14 do
   end
 
   @impl true
-  def part_one({map, min_x, max_x, _min_y, _max_y}) do
+  def part_one({map, min_x, max_x, _min_y, _max_y}, _opts) do
     Stream.iterate(0, &(&1 + 1))
     |> Enum.reduce_while({map, 0}, fn _, {acc_map, i} ->
       updated_map = drop(acc_map, {500, 0}, min_x, max_x)
@@ -56,7 +57,7 @@ defmodule AOC.Y2022.Day14 do
   end
 
   @impl true
-  def part_two({map, min_x, max_x, _min_y, max_y}) do
+  def part_two({map, min_x, max_x, _min_y, max_y}, _opts) do
     map_with_floor =
       Enum.reduce((min_x - @excess_floor)..(max_x + @excess_floor), map, fn x, acc ->
         Map.put(acc, {x, max_y + 2}, "#")

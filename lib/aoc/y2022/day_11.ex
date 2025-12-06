@@ -1,13 +1,14 @@
 defmodule AOC.Y2022.Day11 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 11
   import Utils.General, [:map_product]
   import Utils.Math, [:lcm]
 
   @impl true
-  def load_data() do
-    Data.load_day(2022, 11, "\n\n")
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n\n")
     |> Enum.map(&String.split(&1, "\n"))
     |> Enum.map(fn
       [
@@ -44,7 +45,7 @@ defmodule AOC.Y2022.Day11 do
   defp parse_operation("+ " <> v), do: fn old -> old + String.to_integer(v) end
 
   @impl true
-  def part_one({monkey_data, monkey_items, monkey_count}) do
+  def part_one({monkey_data, monkey_items, monkey_count}, _opts) do
     inspection_count = Map.new(0..(monkey_count - 1), fn i -> {i, 0} end)
 
     1..20
@@ -61,7 +62,7 @@ defmodule AOC.Y2022.Day11 do
   end
 
   @impl true
-  def part_two({monkey_data, monkey_items, monkey_count}) do
+  def part_two({monkey_data, monkey_items, monkey_count}, _opts) do
     inspection_count = Map.new(0..(monkey_count - 1), fn i -> {i, 0} end)
 
     1..10_000

@@ -1,21 +1,23 @@
 defmodule AOC.Y2022.Day8 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2022, day: 8
   import Utils.General, [:generate_coord_list, :map_max]
 
   @dirs [{1, 0}, {-1, 0}, {0, 1}, {0, -1}]
 
   @impl true
-  def load_data() do
-    Data.load_day_as_grid(2022, 8)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
     |> then(fn {trees, m, n} ->
       {Map.new(trees, fn {key, value} -> {key, String.to_integer(value)} end), m, n}
     end)
   end
 
   @impl true
-  def part_one({_trees, m, n} = data) do
+  def part_one({_trees, m, n} = data, _opts) do
     generate_coord_list(m, n)
     |> Enum.count(fn {r, c} ->
       Enum.any?(@dirs, fn {dr, dc} -> visible?(r, c, data, dr, dc) end)
@@ -23,7 +25,7 @@ defmodule AOC.Y2022.Day8 do
   end
 
   @impl true
-  def part_two({_trees, m, n} = data) do
+  def part_two({_trees, m, n} = data, _opts) do
     generate_coord_list(m, n)
     |> map_max(fn {r, c} ->
       @dirs

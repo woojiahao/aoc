@@ -1,7 +1,7 @@
 defmodule AOC.Y2021.Day11 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 11
 
   @dirs [
     {-1, 0},
@@ -15,15 +15,17 @@ defmodule AOC.Y2021.Day11 do
   ]
 
   @impl true
-  def load_data() do
-    Data.load_day_as_grid(2021, 11)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
     |> then(fn {grid, m, n} ->
       {Map.new(grid, fn {k, v} -> {k, String.to_integer(v)} end), m, n}
     end)
   end
 
   @impl true
-  def part_one({grid, m, n}) do
+  def part_one({grid, m, n}, _opts) do
     1..100
     |> Enum.reduce({grid, 0}, fn _, {acc_grid, acc_flashes} ->
       {updated_grid, step_flashes} = step(acc_grid, m, n)
@@ -33,7 +35,7 @@ defmodule AOC.Y2021.Day11 do
   end
 
   @impl true
-  def part_two({grid, m, n}) do
+  def part_two({grid, m, n}, _opts) do
     Stream.iterate(0, &(&1 + 1))
     |> Enum.reduce_while(grid, fn i, acc ->
       {updated_grid, flashed} = step(acc, m, n)

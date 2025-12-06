@@ -1,6 +1,6 @@
 defmodule AOC.Y2023.Day16 do
   @moduledoc false
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 16
 
   @directions %{left: {0, -1}, right: {0, 1}, up: {-1, 0}, down: {1, 0}}
 
@@ -10,17 +10,19 @@ defmodule AOC.Y2023.Day16 do
   @slanted %{left: :up, right: :down, up: :left, down: :right}
 
   @impl true
-  def load_data() do
-    Data.load_day_as_grid(2023, 16)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
+    |> Data.parse_as_grid()
   end
 
   @impl true
-  def part_one({grid, m, n}) do
+  def part_one({grid, m, n}, _opts) do
     start_beam(grid, m, n, 0, 0, :right)
   end
 
   @impl true
-  def part_two({grid, m, n}) do
+  def part_two({grid, m, n}, _opts) do
     0..(m - 1)
     |> Enum.flat_map(&[{&1, 0, :right}, {&1, n - 1, :left}])
     |> Enum.concat(Enum.flat_map(0..(n - 1), &[{0, &1, :down}, {m - 1, &1, :up}]))

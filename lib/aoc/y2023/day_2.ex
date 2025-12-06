@@ -1,15 +1,15 @@
 defmodule AOC.Y2023.Day2 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 2
 
   @red_limit 12
   @green_limit 13
   @blue_limit 14
 
   @impl true
-  def load_data do
-    Data.load_day(2023, 2) |> Enum.map(&parse_line/1)
+  def load_data(data, _opts) do
+    data |> String.split("\n") |> Enum.map(&parse_line/1)
   end
 
   defp parse_line("Game " <> game) do
@@ -39,7 +39,7 @@ defmodule AOC.Y2023.Day2 do
   defp max_by_color(_sets, _colors), do: raise("Invalid color")
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.filter(fn {_id, [red: red, green: green, blue: blue]} ->
       red <= @red_limit && green <= @green_limit && blue <= @blue_limit
@@ -49,7 +49,7 @@ defmodule AOC.Y2023.Day2 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.map(fn {_id, [red: red, green: green, blue: blue]} -> red * green * blue end)
     |> Enum.sum()

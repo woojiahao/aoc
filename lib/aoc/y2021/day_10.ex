@@ -1,7 +1,7 @@
 defmodule AOC.Y2021.Day10 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 10
 
   @braces ~w(\( [ { <)
 
@@ -27,18 +27,19 @@ defmodule AOC.Y2021.Day10 do
   }
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 10)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.graphemes/1)
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     General.map_sum(data, &corrupted/1)
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.filter(&(corrupted(&1) == 0))
     |> Enum.map(&complete/1)

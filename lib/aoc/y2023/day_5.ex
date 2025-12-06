@@ -1,10 +1,10 @@
 defmodule AOC.Y2023.Day5 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 5
 
   @impl true
-  def load_data do
+  def load_data(data, _opts) do
     [
       "seeds: " <> seeds,
       "seed-to-soil map:\n" <> seed_to_soil,
@@ -14,7 +14,7 @@ defmodule AOC.Y2023.Day5 do
       "light-to-temperature map:\n" <> light_to_temperature,
       "temperature-to-humidity map:\n" <> temperature_to_humidity,
       "humidity-to-location map:\n" <> humidity_to_location
-    ] = Data.load_day(2023, 5, "\n\n")
+    ] = data |> String.split("\n\n")
 
     processed_seeds = seeds |> String.split(" ", trim: true) |> Enum.map(&String.to_integer/1)
     sts = process_map(seed_to_soil)
@@ -40,7 +40,7 @@ defmodule AOC.Y2023.Day5 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     {seeds, maps} = data
     seeds |> Enum.map(&dfs(&1, maps)) |> Enum.min()
   end
@@ -61,7 +61,7 @@ defmodule AOC.Y2023.Day5 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     {seeds, maps} = data
 
     seeds

@@ -1,21 +1,22 @@
 defmodule AOC.Y2023.Day15 do
   @moduledoc false
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 15
 
   @impl true
-  def load_data() do
-    Data.load_day(2023, 15)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> List.first()
     |> String.split(",", trim: true)
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data |> General.map_sum(&hash/1)
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.map(&String.reverse/1)
     |> Enum.map(fn

@@ -1,15 +1,16 @@
 defmodule AOC.Y2021.Day2 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 2
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 2)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     data
     |> Enum.reduce({0, 0}, fn
       "forward " <> x, {a, b} -> {a + String.to_integer(x), b}
@@ -20,7 +21,7 @@ defmodule AOC.Y2021.Day2 do
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     data
     |> Enum.reduce({0, 0, 0}, fn
       "down " <> v, {x, y, a} -> {x, y, a + String.to_integer(v)}

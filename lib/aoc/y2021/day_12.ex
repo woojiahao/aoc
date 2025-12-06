@@ -1,11 +1,12 @@
 defmodule AOC.Y2021.Day12 do
   @moduledoc false
 
-  use AOC.Solution
+  use AOC.Solution, year: 2021, day: 12
 
   @impl true
-  def load_data() do
-    Data.load_day(2021, 12)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.split(&1, "-", trim: true))
     |> Enum.reduce(%{}, fn [a, b], acc ->
       acc
@@ -15,14 +16,14 @@ defmodule AOC.Y2021.Day12 do
   end
 
   @impl true
-  def part_one(data) do
+  def part_one(data, _opts) do
     dfs(data, "start", MapSet.new(), [])
     |> Enum.map(&Enum.join(&1))
     |> length()
   end
 
   @impl true
-  def part_two(data) do
+  def part_two(data, _opts) do
     dfs(data, "start", MapSet.new(), [], 2)
     |> IO.inspect()
     |> Enum.map(&Enum.frequencies/1)

@@ -6,15 +6,16 @@ defmodule AOC.Y2023.Day19 do
   to see what led to this state. This lets us track what ranges of x,m,a,s can reach that given
   A state and we can just use those values
   """
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 19
 
   @workflow_pattern ~r/(\w+)\{(.+)\}/
   @categories ~w(x m a s)
 
   @impl true
-  def load_data() do
+  def load_data(data, _opts) do
     [workflows, ratings] =
-      Data.load_day(2023, 19, "\n\n")
+      data
+      |> String.split("\n\n")
       |> Enum.map(&String.split(&1, "\n", trim: true))
 
     parsed_workflows = Map.new(workflows, &parse_workflow/1)
@@ -55,7 +56,7 @@ defmodule AOC.Y2023.Day19 do
   end
 
   @impl true
-  def part_one({workflows, ratings}) do
+  def part_one({workflows, ratings}, _opts) do
     ratings
     |> Enum.map(&{&1, process(workflows["in"], &1, workflows)})
     |> Enum.filter(&(elem(&1, 1) == :A))
@@ -78,7 +79,7 @@ defmodule AOC.Y2023.Day19 do
   end
 
   @impl true
-  def part_two({workflows, _}) do
+  def part_two({workflows, _}, _opts) do
     {:ok, agent} = Agent.start_link(fn -> [] end)
 
     tree(workflows["in"], workflows, [], agent)

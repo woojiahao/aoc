@@ -1,7 +1,7 @@
 defmodule AOC.Y2023.Day10 do
   @moduledoc false
   require Integer
-  use AOC.Solution
+  use AOC.Solution, year: 2023, day: 10
 
   @pipes %{
     "|" => [{-1, 0}, {1, 0}],
@@ -13,8 +13,9 @@ defmodule AOC.Y2023.Day10 do
   }
 
   @impl true
-  def load_data do
-    Data.load_day(2023, 10)
+  def load_data(data, _opts) do
+    data
+    |> String.split("\n")
     |> Enum.map(&String.split(&1, "", trim: true))
     |> then(&to_graph/1)
     |> then(fn {graph, m, n} ->
@@ -90,7 +91,7 @@ defmodule AOC.Y2023.Day10 do
   end
 
   @impl true
-  def part_one({start, graph, m, n}) do
+  def part_one({start, graph, m, n}, _opts) do
     bfs([start], graph, m, n, MapSet.new([start]), 0)
   end
 
@@ -109,7 +110,7 @@ defmodule AOC.Y2023.Day10 do
   end
 
   @impl true
-  def part_two({start, graph, m, n}) do
+  def part_two({start, graph, m, n}, _opts) do
     path = loop_path([start], graph, m, n, MapSet.new([start]))
 
     graph
