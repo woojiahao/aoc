@@ -21,4 +21,10 @@ defmodule Utils.Math do
 
   def euclidean({x1, y1}, {x2, y2}),
     do: :math.pow(:math.pow(x1 - x2, 2) + :math.pow(y1 - y2, 2), 0.5)
+
+  def mod(a, n), do: rem(rem(a, n) + n, n)
+
+  def sign(n) when n == 0, do: 0
+  def sign(n) when n < 0, do: -1
+  def sign(_), do: 1
 end

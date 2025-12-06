@@ -1,47 +1,62 @@
 defmodule Mix.Tasks.Day do
-  @moduledoc false
+  @moduledoc """
+  Runs a given day's solution for the given year.
+
+  ## Options
+
+    * `--test` - runs solution against test input
+
+    * `--part` - the specific part of the day to test
+  """
 
   use Mix.Task
 
-  def run([]) do
-    raise "Provide at least a year and a day"
+  @switches [
+    test: :boolean,
+    part: :integer
+  ]
+
+  @default_opts [test: false, part: nil]
+
+  def run(argv) do
+    {opts, args} = OptionParser.parse!(argv, strict: @switches)
+    opts = Keyword.merge(@default_opts, opts)
+    part = Keyword.get(opts, :part)
+    test = Keyword.get(opts, :test)
+
+    if length(args) < 2 do
+      raise "Provide a year and day"
+    end
+
+    [year, day] = args
+
+    time_part(year, day, part, test)
   end
 
-  def run([year, day]) do
-    {year, day}
-    |> tap(&part_one(elem(&1, 0), elem(&1, 1)))
-    |> tap(&part_two(elem(&1, 0), elem(&1, 1)))
+  @spec time_part(String.t(), String.t(), integer() | nil, boolean()) :: none()
+  defp time_part(year, day, 1, test), do: time_part(year, day, 1, :solve_one, test)
+  defp time_part(year, day, 2, test), do: time_part(year, day, 2, :solve_two, test)
+
+  defp time_part(year, day, nil, test) do
+    time_part(year, day, 1, test)
+    time_part(year, day, 2, test)
   end
 
-  def run([year, day, "1"]) do
-    {year, day}
-    |> tap(&part_one(elem(&1, 0), elem(&1, 1)))
-  end
-
-  def run([year, day, "2"]) do
-    {year, day}
-    |> tap(&part_two(elem(&1, 0), elem(&1, 1)))
-  end
-
-  def run(_list) do
-    run([])
-  end
-
-  defp part_one(year, day) do
-    time_part(year, day, "1", :solve_one)
-  end
-
-  defp part_two(year, day) do
-    time_part(year, day, "2", :solve_two)
-  end
-
-  defp time_part(year, day, part, func) do
+  @spec time_part(
+          String.t(),
+          String.t(),
+          integer(),
+          atom(),
+          boolean()
+        ) ::
+          none()
+  defp time_part(year, day, part, func, test) do
     IO.puts("===== YEAR #{year} DAY #{day} PART #{part} =====")
     module = "Elixir.AOC.Y#{year}.Day#{day}"
     before = :os.system_time(:millisecond)
-    result = apply(String.to_atom(module), func, [])
+    result = apply(String.to_atom(module), func, [test, part])
     now = :os.system_time(:millisecond)
-    IO.puts("Result: #{result}")
+    IO.puts("Result: #{inspect(result)}")
     IO.puts("Took: #{now - before}ms")
   end
 end
