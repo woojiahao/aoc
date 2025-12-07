@@ -37,7 +37,7 @@ defmodule AOC.Y2025.Day1 do
       excess_past_zero =
         acc != 0 and new_acc != 0 and ((r < 0 and new_acc > acc) or (r > 0 and new_acc < acc))
 
-      new_c = c + full_rotations + Enum.count([excess_past_zero, new_acc == 0], fn v -> v end)
+      new_c = c + full_rotations + Enum.count([excess_past_zero, new_acc == 0], & &1)
       {new_acc, new_c}
     end)
     |> elem(1)
