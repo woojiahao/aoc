@@ -21,7 +21,8 @@ defmodule AOC.MixProject do
     [
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:arrays, "~> 2.1"},
-      {:memoize, "~> 1.4"}
+      {:memoize, "~> 1.4"},
+      {:flow, "~> 1.0"}
     ]
   end
 end
