@@ -22,6 +22,12 @@ defmodule Utils.Math do
   def euclidean({x1, y1}, {x2, y2}),
     do: :math.pow(:math.pow(x1 - x2, 2) + :math.pow(y1 - y2, 2), 0.5)
 
+  def euclidean({x1, y1, z1}, {x2, y2, z2}),
+    do: :math.pow(:math.pow(x1 - x2, 2) + :math.pow(y1 - y2, 2) + :math.pow(z1 - z2, 2), 0.5)
+
+  def euclidean(a, b),
+    do: Enum.zip(a, b) |> Enum.sum_by(fn {x, y} -> :math.pow(x - y, 2) end) |> :math.pow(0.5)
+
   def mod(a, n), do: rem(rem(a, n) + n, n)
 
   def sign(n) when n == 0, do: 0
