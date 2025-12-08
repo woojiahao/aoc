@@ -21,6 +21,7 @@ defmodule AOC.Solution do
     quote do
       alias Utils.{Array, Data, General, Geometry, Math, Matrix, Set}
       alias Utils.String, as: AOCString
+      alias Utils.Map, as: AOCMap
 
       @behaviour AOC.Solution
 
