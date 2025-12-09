@@ -15,7 +15,7 @@ defmodule AOC.Y2025.Day8 do
   def part_one(data, %{test: test}) do
     ordered_pairs(data)
     |> Enum.take(pick(test))
-    |> Enum.reduce(UFDS.new(length(data)), fn {i, j, _, _, _}, acc -> UFDS.union(acc, i, j) end)
+    |> Enum.reduce(UFDS.new(length(data)), fn {_, i, j, _, _}, acc -> UFDS.union(acc, i, j) end)
     |> UFDS.union_sizes()
     |> Enum.sort_by(&elem(&1, 1), :desc)
     |> Enum.take(3)
@@ -27,7 +27,7 @@ defmodule AOC.Y2025.Day8 do
     ordered_pairs(data)
     |> Enum.reduce_while(
       {UFDS.new(length(data)), -1, -1},
-      fn {i, j, [x | _], [y | _], _}, {acc, _, _} ->
+      fn {_, i, j, [x | _], [y | _]}, {acc, _, _} ->
         acc = UFDS.union(acc, i, j)
         if acc.unions == 1, do: {:halt, {acc, x, y}}, else: {:cont, {acc, -1, -1}}
       end
@@ -42,16 +42,22 @@ defmodule AOC.Y2025.Day8 do
           {integer(), integer(), [integer()], [integer()], float()}
         ]
   defp ordered_pairs(data) do
+    start = :os.system_time(:millisecond)
     n = length(data)
     vec = :array.from_list(data)
 
-    for i <- 0..(n - 1)//1,
-        j <- (i + 1)..(n - 1)//1 do
-      di = :array.get(i, vec)
-      dj = :array.get(j, vec)
+    res =
+      for i <- 0..(n - 1)//1,
+          j <- (i + 1)..(n - 1)//1 do
+        di = :array.get(i, vec)
+        dj = :array.get(j, vec)
 
-      {i, j, di, dj, Math.euclidean(di, dj)}
-    end
-    |> Enum.sort_by(&elem(&1, 4))
+        {Math.euclidean(di, dj), i, j, di, dj}
+      end
+      |> Enum.sort()
+
+    e = :os.system_time(:millisecond)
+    IO.inspect(e - start, label: "creating the ordered pairs took")
+    res
   end
 end
