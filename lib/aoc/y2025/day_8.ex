@@ -43,11 +43,13 @@ defmodule AOC.Y2025.Day8 do
         ]
   defp ordered_pairs(data) do
     n = length(data)
+    vec = :array.from_list(data)
 
     for i <- 0..(n - 1)//1,
         j <- (i + 1)..(n - 1)//1 do
-      di = Enum.at(data, i)
-      dj = Enum.at(data, j)
+      di = :array.get(i, vec)
+      dj = :array.get(j, vec)
+
       {i, j, di, dj, Math.euclidean(di, dj)}
     end
     |> Enum.sort_by(&elem(&1, 4))
