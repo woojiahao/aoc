@@ -13,9 +13,11 @@ defmodule AOC.Y2025.Day8 do
 
   @impl true
   def part_one(data, %{test: test}) do
-    ordered_pairs(data)
-    |> Enum.take(pick(test))
-    |> Enum.reduce(UFDS.new(length(data)), fn {_, i, j, _, _}, acc -> UFDS.union(acc, i, j) end)
+    Enum.reduce(1..pick(test), {ordered_pairs(data), UFDS.new(length(data))}, fn _, {h, u} ->
+      {h, {_, i, j, _, _}} = Heap.pop(h)
+      {h, UFDS.union(u, i, j)}
+    end)
+    |> elem(1)
     |> UFDS.union_sizes()
     |> Enum.sort_by(&elem(&1, 1), :desc)
     |> Enum.take(3)
@@ -24,25 +26,21 @@ defmodule AOC.Y2025.Day8 do
 
   @impl true
   def part_two(data, _opts) do
-    ordered_pairs(data)
-    |> Enum.reduce_while(
-      {UFDS.new(length(data)), -1, -1},
-      fn {_, i, j, [x | _], [y | _]}, {acc, _, _} ->
-        acc = UFDS.union(acc, i, j)
-        if acc.unions == 1, do: {:halt, {acc, x, y}}, else: {:cont, {acc, -1, -1}}
-      end
-    )
-    |> then(fn {_, x, y} -> x * y end)
+    operation(UFDS.new(length(data)), ordered_pairs(data))
+  end
+
+  @spec operation(UFDS.t(), Heap.t()) :: integer()
+  defp operation(ufds, heap) do
+    {heap, {_, i, j, [x | _], [y | _]}} = Heap.pop(heap)
+    ufds = UFDS.union(ufds, i, j)
+    if ufds.unions == 1, do: x * y, else: operation(ufds, heap)
   end
 
   defp pick(true), do: 10
   defp pick(_), do: 1000
 
-  @spec ordered_pairs([[integer()]]) :: [
-          {integer(), integer(), [integer()], [integer()], float()}
-        ]
+  @spec ordered_pairs([[integer()]]) :: Heap.t()
   defp ordered_pairs(data) do
-    start = :os.system_time(:millisecond)
     n = length(data)
     vec = :array.from_list(data)
 
@@ -54,10 +52,8 @@ defmodule AOC.Y2025.Day8 do
 
         {Math.euclidean(di, dj), i, j, di, dj}
       end
-      |> Enum.sort()
+      |> Heap.from_list(&(elem(&1, 0) < elem(&2, 0)))
 
-    e = :os.system_time(:millisecond)
-    IO.inspect(e - start, label: "creating the ordered pairs took")
     res
   end
 end

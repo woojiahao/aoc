@@ -14,10 +14,22 @@ defmodule Utils.Heap do
     %__MODULE__{data: :array.new(), size: 0, max_size: max_size, cmp: cmp}
   end
 
+  def from_list(list, cmp, max_size \\ :infinity) do
+    arr = :array.from_list(list)
+    size = length(list)
+    heap = %__MODULE__{data: arr, size: size, max_size: max_size, cmp: cmp}
+
+    last_parent = div(size - 2, 2)
+
+    Enum.reduce(last_parent..0//-1, heap, fn i, h ->
+      sift_down(h, i)
+    end)
+  end
+
   def peek(%__MODULE__{size: 0}), do: nil
   def peek(%__MODULE__{data: data}), do: :array.get(0, data)
 
-  def insert(heap = %__MODULE__{data: data, size: size, cmp: cmp, max_size: max}, element) do
+  def insert(%__MODULE__{data: data, size: size, cmp: cmp, max_size: max} = heap, element) do
     data = :array.set(size, element, data)
     heap = %__MODULE__{heap | data: data, size: size + 1}
     heap = sift_up(heap, size)
@@ -45,9 +57,8 @@ defmodule Utils.Heap do
     xi = :array.get(i, data)
     xj = :array.get(j, data)
 
-    data
-    |> :array.set(i, xj)
-    |> :array.set(j, xi)
+    data = :array.set(i, xj, data)
+    :array.set(j, xi, data)
   end
 
   defp sift_up(heap, 0), do: heap

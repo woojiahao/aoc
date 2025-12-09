@@ -12,6 +12,13 @@ defmodule Utils.UFDS do
     }
   end
 
+  @type t :: %__MODULE__{
+          n: integer(),
+          parents: %{integer() => integer()},
+          ranks: %{integer() => integer()},
+          unions: integer()
+        }
+
   def find(ufds, p) do
     parent = ufds.parents[p]
 
