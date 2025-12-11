@@ -135,4 +135,7 @@ defmodule Utils.General do
   def xor_list(arr, starting \\ 0) do
     Enum.reduce(arr, starting, fn k, acc -> Utils.Math.xor(k, acc) end)
   end
+
+  def bool_to_int(true), do: 1
+  def bool_to_int(false), do: 0
 end

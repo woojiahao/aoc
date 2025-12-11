@@ -49,6 +49,9 @@ defmodule Utils.Matrix do
   def transpose(%{m: m, n: n} = matrix),
     do: %Utils.Matrix{m: n, n: m, data: transpose_helper(n - 1, m - 1, matrix)}
 
+  def transpose(matrix) when is_list(matrix),
+    do: matrix |> Enum.zip() |> Enum.map(&Tuple.to_list/1)
+
   # defp matmul(r, c, %{m: m} = matrix, %{n: n} = other) when r >= m or c >= n, do: %{}
 
   # defp matmul_helper(r, c, %{m: m} = matrix, %{n: n} = other) do
