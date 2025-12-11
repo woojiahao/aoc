@@ -131,4 +131,8 @@ defmodule Utils.General do
   def top_k(arr, k) do
     arr |> Enum.sort(:desc) |> Enum.slice(0..(k - 1)//1)
   end
+
+  def xor_list(arr, starting \\ 0) do
+    Enum.reduce(arr, starting, fn k, acc -> Utils.Math.xor(k, acc) end)
+  end
 end

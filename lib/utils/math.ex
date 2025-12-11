@@ -36,4 +36,8 @@ defmodule Utils.Math do
   def sign(n) when n == 0, do: 0
   def sign(n) when n < 0, do: -1
   def sign(_), do: 1
+
+  def xor(a, b), do: Bitwise.bxor(a, b)
+
+  def ipow(a, b), do: :math.pow(a, b) |> trunc()
 end
