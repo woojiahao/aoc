@@ -14,26 +14,23 @@ defmodule Utils.Data do
       |> File.read!()
       |> String.trim()
 
-  # @spec load_day(integer(), integer(), String.t()) :: any()
-  # def load_day(year, day, split),
-  #   do:
-  #     Path.join([:code.priv_dir(:aoc), Integer.to_string(year), "day#{day}.txt"])
-  #     |> File.read!()
-  #     |> String.trim()
-  #     |> String.split(split)
-  #
-  # def load_day(year, day), do: load_day(year, day, "\n")
-
-  # def load_day_as_grid(year, day, line_delimiter \\ ""),
-  #   do:
-  #     load_day(year, day)
-  #     |> Enum.map(&String.split(&1, line_delimiter, trim: true))
-  #     |> then(&create_grid/1)
-  #
   def parse_as_grid(data, line_delimiter \\ "") do
     data
     |> Enum.map(&String.split(&1, line_delimiter, trim: true))
     |> create_grid()
+  end
+
+  @spec parse_as_coords(String.t()) :: tuple()
+  def parse_as_coords(data) when is_bitstring(data) do
+    data
+    |> String.split(",")
+    |> Enum.map(&String.to_integer/1)
+    |> List.to_tuple()
+  end
+
+  @spec parse_as_coords([String.t()]) :: [tuple()]
+  def parse_as_coords(data) do
+    Enum.map(data, &parse_as_coords/1)
   end
 
   defp create_grid(points) do
