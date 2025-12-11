@@ -23,7 +23,7 @@ defmodule AOC.MixProject do
       {:arrays, "~> 2.1"},
       {:memoize, "~> 1.4"},
       {:flow, "~> 1.0"},
-      {:dantzig, "~> 0.1.0"}
+      {:dantzig, github: "Pascal736/dantzig", branch: "add-variable-type-support"}
     ]
   end
 end

@@ -21,4 +21,6 @@ defmodule Utils.Array do
     |> Enum.flat_map(& &1)
     |> Map.new()
   end
+
+  def array_at(array, at), do: :array.get(at, array)
 end

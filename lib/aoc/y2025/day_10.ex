@@ -23,33 +23,88 @@ defmodule AOC.Y2025.Day10 do
 
   @impl true
   def part_one(data, _opts) do
-    data
-    |> Enum.sum_by(&find_fewest_total_presses/1)
+    Enum.sum_by(data, &find_fewest_total_presses_for_indicator_light/1)
   end
 
   @impl true
-  def part_two(_data, _opts) do
-    :not_implemented
+  def part_two(data, _opts) do
+    Enum.sum_by(data, &find_fewest_total_presses_for_joltage_requirement/1)
   end
 
-  @spec find_fewest_total_presses(machine()) :: integer()
-  @spec find_fewest_total_presses(
+  @spec find_fewest_total_presses_for_joltage_requirement(machine()) :: integer()
+  defp find_fewest_total_presses_for_joltage_requirement(%{
+         button_wirings: buttons,
+         joltage_requirement: joltage
+       }) do
+    problem = Dantzig.Problem.new(direction: :minimize)
+    n = length(joltage)
+    m = length(buttons)
+
+    {problem, variables} =
+      Enum.reduce(1..m, {problem, []}, fn num, {problem, variables} ->
+        {problem, variable} =
+          Dantzig.Problem.new_variable(problem, "#{num}", min: 0, type: :integer)
+
+        {problem, [variable | variables]}
+      end)
+
+    variables = Enum.reverse(variables)
+
+    button_matrix =
+      buttons
+      |> Enum.map(&Enum.map(0..(n - 1), fn i -> i in &1 end))
+      |> Matrix.transpose()
+
+    problem =
+      joltage
+      |> Enum.with_index()
+      |> Enum.reduce(problem, fn {j, i}, p ->
+        variables_for_buttons =
+          button_matrix
+          |> Enum.at(i)
+          |> Enum.zip(variables)
+          |> Enum.filter(&elem(&1, 0))
+          |> Enum.map(&elem(&1, 1))
+
+        constraint =
+          Dantzig.Constraint.new(Dantzig.Polynomial.sum(variables_for_buttons), :==, j)
+
+        Dantzig.Problem.add_constraint(p, constraint)
+      end)
+      |> Dantzig.Problem.increment_objective(Dantzig.Polynomial.sum(variables))
+
+    {:ok, solution} = Dantzig.solve(problem)
+
+    solution.variables
+    |> Map.values()
+    |> Enum.sum()
+  end
+
+  @spec find_fewest_total_presses_for_indicator_light(machine()) :: integer()
+  @spec find_fewest_total_presses_for_indicator_light(
           [{integer(), integer()}],
           integer(),
           [button_wiring_schematic_number()],
           MapSet.t(integer())
         ) :: integer()
-  defp find_fewest_total_presses(%{
+  defp find_fewest_total_presses_for_indicator_light(%{
          indicator_light_diagram: light,
          button_wiring_numbers: buttons
        }) do
-    find_fewest_total_presses([{0, 0}], light, buttons, MapSet.new([]))
+    find_fewest_total_presses_for_indicator_light([{0, 0}], light, buttons, MapSet.new([]))
   end
 
-  defp find_fewest_total_presses([], _, _, _), do: 0
-  defp find_fewest_total_presses([{target, steps} | _], target, _, _), do: steps
+  defp find_fewest_total_presses_for_indicator_light([], _, _, _), do: 0
 
-  defp find_fewest_total_presses([{arrangement, steps} | rest], target, buttons, visited) do
+  defp find_fewest_total_presses_for_indicator_light([{target, steps} | _], target, _, _),
+    do: steps
+
+  defp find_fewest_total_presses_for_indicator_light(
+         [{arrangement, steps} | rest],
+         target,
+         buttons,
+         visited
+       ) do
     new_arrangements =
       buttons
       |> Enum.map(&Math.xor(arrangement, &1))
@@ -58,7 +113,7 @@ defmodule AOC.Y2025.Day10 do
     new_visited = MapSet.union(visited, MapSet.new(new_arrangements))
 
     to_try = new_arrangements |> Enum.dedup() |> Enum.map(&{&1, steps + 1})
-    find_fewest_total_presses(rest ++ to_try, target, buttons, new_visited)
+    find_fewest_total_presses_for_indicator_light(rest ++ to_try, target, buttons, new_visited)
   end
 
   @spec parse_machine(String.t()) :: machine()
